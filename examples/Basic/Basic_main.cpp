@@ -2,17 +2,20 @@
 
 LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 
+const int CONVERT_UNITS[] = {CONVERT_METRIC, CONVERT_IMPERIAL, CONVERT_SOMETHING, CONVERT_SOMETHING2, CONVERT_SOMETHING3};
 const char *MSG_UNITS[] = {"METRIC","IMPERIAL","SOMETHING1","SOMETHING2","SOMETHING3"};
+int units = 0;
+
 int lathe_mill = LATHE; //LATHE chosen by default
 
 bool displayUsrScreenImmediately = false;
 char lcdchars[80];
 char buf[20];
-int units = 0;
+
 menwiz tree;
 volatile int countX=100, countY=100, countZ=100;
 volatile float x,y,z;
-float preset_x=-1.0, preset_y=-1.0, preset_z=-1.0; 
+float preset_x=-0.5, preset_y=-0.5, preset_z=-0.5; 
 _menu *r,*s0,*s1,*s2, *s3, *s4, *q4, *p1,*p2,*p3,*p4;
 
 
@@ -62,7 +65,7 @@ void loop() {
 }
 
 void myuserscreen() {
-  float x=countX/1.0,y=countY/1.0,z=countZ/1.0;
+  float x=countX/CONVERT_UNITS[units],y=countY/CONVERT_UNITS[units],z=countZ/CONVERT_UNITS[units];
   //Serial.println("myuserscreen:");
   if (lathe_mill == LATHE) {
     strcpy(lcdchars, "LATHE(");
@@ -111,6 +114,25 @@ int navigation() {
       case 's': return MW_BTE;
     }
    }
+
+  else if (preset_x + preset_y + preset_z != -1.5) {
+    if (preset_x  != -0.5) {
+      countX = round(preset_x * CONVERT_UNITS[units] ); 
+    }
+ 
+    else if (preset_y  != -0.5) {
+
+    }
+
+    else if (preset_z  != -0.5) {
+
+    }
+
+    preset_x = -0.5;
+    preset_y = -0.5;
+    preset_z = -0.5;
+    return MW_BTE;
+  }
 
   else
      return MW_BTNULL;  
