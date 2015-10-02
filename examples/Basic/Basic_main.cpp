@@ -2,7 +2,7 @@
 
 LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 
-const int CONVERT_UNITS[] = {CONVERT_METRIC, CONVERT_IMPERIAL, CONVERT_SOMETHING, CONVERT_SOMETHING2, CONVERT_SOMETHING3};
+const float CONVERT_UNITS[] = {CONVERT_METRIC, CONVERT_IMPERIAL, CONVERT_SOMETHING, CONVERT_SOMETHING2, CONVERT_SOMETHING3};
 const char *MSG_UNITS[] = {"METRIC","IMPERIAL","SOMETHING1","SOMETHING2","SOMETHING3"};
 int units = 0;
 
@@ -71,10 +71,10 @@ void myuserscreen() {
     strcpy(lcdchars, "LATHE(");
     strcat(lcdchars, MSG_UNITS[units]);
     strcat(lcdchars, ")\n\nX         Y\n");
-    dtostrf(x, 5,2,   buf);
+    dtostrf(x, 6,2,   buf);
     strcat(lcdchars,buf);
     strcat(lcdchars, "    ");
-    dtostrf(y, 5,2,   buf);
+    dtostrf(y, 6,2,   buf);
     strcat(lcdchars,buf);
   }
 
@@ -115,16 +115,16 @@ int navigation() {
     }
    }
 
-  else if (preset_x + preset_y + preset_z != -1.5) {
-    if (preset_x  != -0.5) {
+  else if (preset_x + preset_y + preset_z + 1.5 > 0.01 && tree.cur_menu->parent == 0) {
+    if (preset_x - 0.5 > 0.01) {
       countX = round(preset_x * CONVERT_UNITS[units] ); 
     }
  
-    else if (preset_y  != -0.5) {
+    else if (preset_y - 0.5 > 0.01) {
       countY = round(preset_y * CONVERT_UNITS[units] ); 
     }
 
-    else if (preset_z  != -0.5) {
+    else if (preset_z  - 0.5 > 0.01) {
       countZ = round(preset_z * CONVERT_UNITS[units] ); 
     }
 
