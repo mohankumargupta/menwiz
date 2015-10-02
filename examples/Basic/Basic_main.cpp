@@ -121,11 +121,11 @@ int navigation() {
     }
  
     else if (preset_y  != -0.5) {
-
+      countY = round(preset_y * CONVERT_UNITS[units] ); 
     }
 
     else if (preset_z  != -0.5) {
-
+      countZ = round(preset_z * CONVERT_UNITS[units] ); 
     }
 
     preset_x = -0.5;
