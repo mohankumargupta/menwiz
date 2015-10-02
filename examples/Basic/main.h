@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include <MENWIZ.h>
 #include <LiquidCrystal_I2C.h>
+#include "Configuration.h"
 
 // Lathe/mill
 #define LATHE 0
