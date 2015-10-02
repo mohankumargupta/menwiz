@@ -13,7 +13,7 @@ char lcdchars[80];
 char buf[20];
 
 menwiz tree;
-volatile int countX=100, countY=100, countZ=100;
+volatile int countX=0, countY=0, countZ=0;
 volatile float x,y,z;
 float preset_x=-0.5, preset_y=-0.5, preset_z=-0.5; 
 _menu *r,*s0,*s1,*s2, *s3, *s4, *q4, *p1,*p2,*p3,*p4;
