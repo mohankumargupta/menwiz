@@ -18,6 +18,10 @@
 
 #define TIMEOUT_DELAY 10000
 
+#define PRESET_MIN 0.0
+#define PRESET_MAX 1000.0
+#define PRESET_INCREMENT 0.5
+
 
 int navigation();
 void zeroaxis();
