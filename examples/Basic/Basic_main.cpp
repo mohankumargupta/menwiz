@@ -71,10 +71,10 @@ void myuserscreen() {
     strcpy(lcdchars, "LATHE(");
     strcat(lcdchars, MSG_UNITS[units]);
     strcat(lcdchars, ")\n\nX         Y\n");
-    dtostrf(x, 1,2,   buf);
+    dtostrf(x, 5,2,   buf);
     strcat(lcdchars,buf);
     strcat(lcdchars, "    ");
-    dtostrf(y, 1,2,   buf);
+    dtostrf(y, 5,2,   buf);
     strcat(lcdchars,buf);
   }
 
@@ -82,13 +82,13 @@ void myuserscreen() {
     strcpy(lcdchars, "MILL(");
     strcat(lcdchars, MSG_UNITS[units]);
     strcat(lcdchars, ")\n\nX      Y      Z\n");
-    dtostrf(x, 1,1,   buf);
+    dtostrf(x, 5,1,   buf);
     strcat(lcdchars,buf);
     strcat(lcdchars, "  ");
-    dtostrf(y, 1,1,   buf);
+    dtostrf(y, 5,1,   buf);
     strcat(lcdchars,buf);
     strcat(lcdchars, "  ");
-    dtostrf(z, 1,1,   buf);
+    dtostrf(z, 5,1,   buf);
     strcat(lcdchars,buf);
   }
   
