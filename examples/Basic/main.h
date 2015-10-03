@@ -4,7 +4,6 @@
 #include <Arduino.h>
 #include <MENWIZ.h>
 #include <LiquidCrystal_I2C.h>
-#include <EnableInterrupt.h>
 #define LIBCALL_ENABLEINTERRUPT
 #define EI_NOTEXTERNAL
 #include <EnableInterrupt.h>
