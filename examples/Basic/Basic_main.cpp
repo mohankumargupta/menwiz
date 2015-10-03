@@ -2,6 +2,11 @@
 
 LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 
+int count=0;
+
+long oldPosition = -999;
+long newPosition = 0;
+
 const float CONVERT_UNITS[] = {CONVERT_METRIC, CONVERT_IMPERIAL, CONVERT_SOMETHING, CONVERT_SOMETHING2, CONVERT_SOMETHING3};
 const char *MSG_UNITS[] = {"METRIC","IMPERIAL","SOMETHING1","SOMETHING2","SOMETHING3"};
 int units = 0;
@@ -20,10 +25,14 @@ volatile float x,y,z;
 float preset_x=-0.5, preset_y=-0.5, preset_z=-0.5; 
 _menu *r,*s0,*s1,*s2, *s3, *s4, *q4, *p1,*p2,*p3,*p4;
 
-
 void setup() {
   pinMode(ENCODER_BUTTON, INPUT_PULLUP);
   enableInterrupt(ENCODER_BUTTON, encoderButtonClicked ,RISING);
+  pinMode(ENCODER_A, INPUT_PULLUP);
+  pinMode(ENCODER_B, INPUT_PULLUP);
+  enableInterrupt(ENCODER_A, encoderTurned, CHANGE);
+  enableInterrupt(ENCODER_B, encoderTurned, CHANGE);
+
   Serial.begin(115200);    
   tree.begin(&lcd,20,4); //declare lcd object and screen size to menwiz lib
   lcd.clear();
@@ -65,6 +74,15 @@ void setup() {
 
 void loop() {
   tree.draw();
+
+  newPosition = count;
+  if (newPosition != oldPosition) {
+    Serial.print("old:");
+    Serial.println(oldPosition);
+    oldPosition = newPosition;
+    Serial.print("newPosition:");
+    Serial.println(newPosition / 4);
+  }
 }
 
 void myuserscreen() {
@@ -159,4 +177,23 @@ void exitMenu() {
 
 void encoderButtonClicked() {
   encoderClicked = true; 
+}
+
+void encoderTurned() {
+  uint8_t s = state & 3;
+  if (digitalRead(encoderA)) s |= 4;
+  if (digitalRead(encoderB)) s |= 8;
+  switch (s) {
+    case 0: case 5: case 10: case 15:
+      break;
+    case 1: case 7: case 8: case 14:
+      count++; break;
+    case 2: case 4: case 11: case 13:
+      count--; break;
+    case 3: case 12:
+      count += 2; break;
+    default:
+      count -= 2; break;
+  }
+  state = (s >> 2);
 }

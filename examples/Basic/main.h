@@ -32,6 +32,7 @@ void zeroaxis();
 void exitMenu();
 void myuserscreen();
 void encoderButtonClicked();
+void encoderTurned();
 
 #endif //BASIC_H
 
