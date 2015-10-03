@@ -4,6 +4,10 @@
 #include <Arduino.h>
 #include <MENWIZ.h>
 #include <LiquidCrystal_I2C.h>
+#include <EnableInterrupt.h>
+#define LIBCALL_ENABLEINTERRUPT
+#define EI_NOTEXTERNAL
+#include <EnableInterrupt.h>
 #include "Configuration.h"
 
 // Lathe/mill
@@ -28,6 +32,7 @@ int navigation();
 void zeroaxis();
 void exitMenu();
 void myuserscreen();
+void encoderButtonClicked();
 
 #endif //BASIC_H
 

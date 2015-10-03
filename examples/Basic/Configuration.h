@@ -15,6 +15,7 @@
 #define ENCODERY_B 5
 #define ENCODERZ_A 6
 #define ENCODERZ_B 7
+#define ENCODER_BUTTON 8
 
 // LCD Encoder 
 #define LCD_ENCODER 8

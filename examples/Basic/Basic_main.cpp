@@ -12,6 +12,8 @@ bool displayUsrScreenImmediately = false;
 char lcdchars[80];
 char buf[20];
 
+bool encoderClicked = false;
+
 menwiz tree;
 volatile int countX=0, countY=0, countZ=0;
 volatile float x,y,z;
@@ -20,7 +22,8 @@ _menu *r,*s0,*s1,*s2, *s3, *s4, *q4, *p1,*p2,*p3,*p4;
 
 
 void setup() {
-  
+  pinMode(ENCODER_BUTTON, INPUT_PULLUP);
+  enableInterrupt(ENCODER_BUTTON, encoderButtonClicked ,RISING);
   Serial.begin(115200);    
   tree.begin(&lcd,20,4); //declare lcd object and screen size to menwiz lib
   lcd.clear();
@@ -97,6 +100,11 @@ void myuserscreen() {
 
 int navigation() {
 
+  if (encoderClicked) {   
+    encoderClicked = false;
+    return MW_BTC;
+  }
+
   if (displayUsrScreenImmediately) {
    displayUsrScreenImmediately= false;
    return MW_BTE;
@@ -147,4 +155,8 @@ void zeroaxis() {
 
 void exitMenu() {
   displayUsrScreenImmediately=true;  
+}
+
+void encoderButtonClicked() {
+  encoderClicked = true; 
 }
