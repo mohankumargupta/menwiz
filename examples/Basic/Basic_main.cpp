@@ -2,8 +2,8 @@
 
 LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 
-int count=0;
-
+volatile int count=0;
+volatile int state;
 long oldPosition = -999;
 long newPosition = 0;
 
@@ -18,6 +18,7 @@ char lcdchars[80];
 char buf[20];
 
 bool encoderClicked = false;
+volatile int encoderRotated = 0;
 
 menwiz tree;
 volatile int countX=0, countY=0, countZ=0;
@@ -77,11 +78,21 @@ void loop() {
 
   newPosition = count;
   if (newPosition != oldPosition) {
-    Serial.print("old:");
-    Serial.println(oldPosition);
+    if (newPosition/4 - oldPosition/4 == 1) {
+      Serial.println("increment");
+      encoderRotated = 1;
+    }
+
+    if (oldPosition/4 - newPosition/4 == 1) {
+      Serial.println("decrement");
+      encoderRotated = 2;
+    }
+
+    //Serial.print("old:");
+    //Serial.println(oldPosition);
     oldPosition = newPosition;
-    Serial.print("newPosition:");
-    Serial.println(newPosition / 4);
+    //Serial.print("newPosition:");
+    //Serial.println(newPosition / 4);
   }
 }
 
@@ -117,6 +128,18 @@ void myuserscreen() {
 }
 
 int navigation() {
+
+    if (encoderRotated == 1) {
+      encoderRotated = 0;
+      return MW_BTU;
+    }
+    if (encoderRotated == 2) { 
+      encoderRotated = 0;
+      return MW_BTD;
+    } 
+    
+
+
 
   if (encoderClicked) {   
     encoderClicked = false;
@@ -181,8 +204,8 @@ void encoderButtonClicked() {
 
 void encoderTurned() {
   uint8_t s = state & 3;
-  if (digitalRead(encoderA)) s |= 4;
-  if (digitalRead(encoderB)) s |= 8;
+  if (digitalRead(ENCODER_A)) s |= 4;
+  if (digitalRead(ENCODER_B)) s |= 8;
   switch (s) {
     case 0: case 5: case 10: case 15:
       break;
