@@ -1,13 +1,18 @@
 #ifndef BASIC_H
 #define BASIC_H
 
+#include "Configuration.h"
 #include <Arduino.h>
 #include <MENWIZ.h>
-#include <LiquidCrystal_I2C.h>
+#ifdef LCD_PARALLEL
+  #include <LiquidCrystal.h>
+#else
+  #include <LiquidCrystal_I2C.h>
+#endif
 #define LIBCALL_ENABLEINTERRUPT
 #define EI_NOTEXTERNAL
 #include <EnableInterrupt.h>
-#include "Configuration.h"
+
 
 // Lathe/mill
 #define LATHE 0
