@@ -39,8 +39,12 @@ void setup() {
   enableInterrupt(ENCODER_A, encoderTurned, CHANGE);
   enableInterrupt(ENCODER_B, encoderTurned, CHANGE);
 
-  Serial.begin(115200);    
-  tree.begin(&lcd,20,4); //declare lcd object and screen size to menwiz lib
+  Serial.begin(115200); 
+  #ifdef LCD_SIXTEENBYTWO   
+    tree.begin(&lcd,16,2); 
+  #else
+    tree.begin(&lcd,20,4);
+  #endif
   lcd.clear();
   strcpy(lcdchars, "");
 

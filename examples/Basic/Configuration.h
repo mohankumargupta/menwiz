@@ -34,6 +34,7 @@
 #define LCD_D6 6
 #define LCD_D7 7
 
-
+// Uncomment if your LCD is 16x2
+//#define LCD_SIXTEENBYTWO
 
 #endif //CONFIGURATION_H
