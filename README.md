@@ -20,7 +20,7 @@ NB: The default LiquidCrystal library needs to be moved out of the libraries dir
 
 Install this library like any other. You can use the Arduino IDE for this step if you prefer.There is an example sketch included.
 
-#FILES IN EXAMPLE SKETCH
+#Files in Example Sketch
 Basic.ino : These contain headers for the libraries required. If you need additional libraries, include headers here.
 Basic_main.cpp: The main setup and loop functions are here.
 main.h: You will find constants and function declarations here.
