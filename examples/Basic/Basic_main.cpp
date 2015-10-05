@@ -85,12 +85,12 @@ void loop() {
   if (newPosition != oldPosition) {
     if (newPosition/4 - oldPosition/4 == 1) {
       //Serial.println("increment");
-      encoderRotated = 1;
+      encoderRotated = ENCODERROTATED_CLOCKWISE;
     }
 
     if (oldPosition/4 - newPosition/4 == 1) {
       //Serial.println("decrement");
-      encoderRotated = 2;
+      encoderRotated = ENCODERROTATED_ANTICLOCKWISE;
     }
 
     oldPosition = newPosition;
@@ -130,13 +130,13 @@ void myuserscreen() {
 
 int navigation() {
 
-  if (encoderRotated == 1) {
-    encoderRotated = 0;
+  if (encoderRotated == ENCODERROTATED_CLOCKWISE) {
+    encoderRotated = ENCODERROTATED_NONE;
     return MW_BTU;
   }
   
-  if (encoderRotated == 2) { 
-    encoderRotated = 0;
+  if (encoderRotated == ENCODERROTATED_ANTICLOCKWISE) { 
+    encoderRotated = ENCODERROTATED_NONE;
     return MW_BTD;
   } 
     
