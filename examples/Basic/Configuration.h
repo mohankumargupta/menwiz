@@ -28,4 +28,15 @@
 //Uncomment out the following if you are using parallel LCD 
 //#define LCD_PARALLEL
 
+// Only relevant if you are using parallel I2C, no effect on I2C
+LCD_ADDRESS 0x27
+LCD_RS 8
+LCD_EN 9
+LCD_D4 4
+LCD_D5 5
+LCD_D6 6
+LCD_D7 7
+
+
+
 #endif //CONFIGURATION_H

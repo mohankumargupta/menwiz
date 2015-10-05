@@ -2,6 +2,7 @@
 
 Menu library for Arduino LCD with rotary encoder
 Highly customised version of MENWIZ library (https://github.com/brunialti/MENWIZ_1_3_2)
+The included PDF (MENWIZ_1_3_QUICK_TOUR.pdf) explains how to implement the full functionality of the menu system.
 
 #Prequisites:
 
@@ -28,8 +29,6 @@ Configuration.h: This contains user-configurable settings.
 README.md this file
 
 #Todo
-1. Add an option to Configuration to allow you to choose between LiquidCrystal.h (parallel) and LiquidCrystal_I2C.h (i2C)
-2. encoder functionality (both the one attached to LCD and linear encoders XYZ)
-
-
+1. encoder functionality (both the one attached to LCD and linear encoders XYZ)
+2. trellis keypad support.
 

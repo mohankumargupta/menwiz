@@ -1,6 +1,11 @@
 #include "main.h"
 
-LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
+#ifdef LCD_PARALLEL
+  LiquidCrystal lcd(LCD_ADDRESS,LCD_RS,LCD_EN,LCD_D4,LCD_D5,LCD_D6,LCD_D7);
+#else
+  LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
+#endif
+
 
 volatile int count=0;
 volatile int state;
@@ -18,7 +23,7 @@ char lcdchars[80];
 char buf[20];
 
 bool encoderClicked = false;
-volatile int encoderRotated = 0;
+volatile int encoderRotated = ENCODERROTATED_NONE;
 
 menwiz tree;
 volatile int countX=0, countY=0, countZ=0;
@@ -79,26 +84,22 @@ void loop() {
   newPosition = count;
   if (newPosition != oldPosition) {
     if (newPosition/4 - oldPosition/4 == 1) {
-      Serial.println("increment");
+      //Serial.println("increment");
       encoderRotated = 1;
     }
 
     if (oldPosition/4 - newPosition/4 == 1) {
-      Serial.println("decrement");
+      //Serial.println("decrement");
       encoderRotated = 2;
     }
 
-    //Serial.print("old:");
-    //Serial.println(oldPosition);
     oldPosition = newPosition;
-    //Serial.print("newPosition:");
-    //Serial.println(newPosition / 4);
   }
 }
 
 void myuserscreen() {
   float x=countX/CONVERT_UNITS[units],y=countY/CONVERT_UNITS[units],z=countZ/CONVERT_UNITS[units];
-  //Serial.println("myuserscreen:");
+
   if (lathe_mill == LATHE) {
     strcpy(lcdchars, "LATHE(");
     strcat(lcdchars, MSG_UNITS[units]);
@@ -129,18 +130,16 @@ void myuserscreen() {
 
 int navigation() {
 
-    if (encoderRotated == 1) {
-      encoderRotated = 0;
-      return MW_BTU;
-    }
-    if (encoderRotated == 2) { 
-      encoderRotated = 0;
-      return MW_BTD;
-    } 
+  if (encoderRotated == 1) {
+    encoderRotated = 0;
+    return MW_BTU;
+  }
+  
+  if (encoderRotated == 2) { 
+    encoderRotated = 0;
+    return MW_BTD;
+  } 
     
-
-
-
   if (encoderClicked) {   
     encoderClicked = false;
     return MW_BTC;

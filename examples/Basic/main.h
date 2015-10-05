@@ -26,6 +26,9 @@
 #define PRESET_MAX 1000.0
 #define PRESET_INCREMENT 0.5
 
+#define ENCODERROTATED_NONE 0
+#define ENCODERROTATED_CLOCKWISE 1
+#define ENCODERROTATED_ANTICLOCKWISE 2
 
 int navigation();
 void zeroaxis();
