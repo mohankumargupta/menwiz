@@ -9,14 +9,14 @@
 #define CONVERT_SOMETHING3 1.0
 
 // Encoder Ports - XYZ Axis linear encoders 
-//#define ENCODERX_A 6
-//#define ENCODERX_B 7
-//#define ENCODERX_A 2
-//#define ENCODERX_B 3
-//#define ENCODERY_A 4
-//#define ENCODERY_B 5
-//#define ENCODERZ_A 6
-//#define ENCODERZ_B 7
+//#define ENCODERX_PINA 6
+//#define ENCODERX_PINB 7
+//#define ENCODERX_PINA 2
+//#define ENCODERX_PINB 3
+//#define ENCODERY_PINA 4
+//#define ENCODERY_PINB 5
+//#define ENCODERZ_PINA 6
+//#define ENCODERZ_PINB 7
 #define ENCODER_A 6
 #define ENCODER_B 7
 #define ENCODER_BUTTON 8
@@ -24,6 +24,8 @@
 // LCD Encoder 
 #define LCD_ENCODER 8
 
-
+//Comment out the following if you are using I2C LCD
+//Uncomment out the following if you are using parallel LCD 
+//#define LCD_PARALLEL
 
 #endif //CONFIGURATION_H
