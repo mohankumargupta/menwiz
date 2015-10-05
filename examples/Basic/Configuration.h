@@ -21,9 +21,6 @@
 #define ENCODER_B 7
 #define ENCODER_BUTTON 8
 
-// LCD Encoder 
-#define LCD_ENCODER 8
-
 //Comment out the following if you are using I2C LCD
 //Uncomment out the following if you are using parallel LCD 
 //#define LCD_PARALLEL
