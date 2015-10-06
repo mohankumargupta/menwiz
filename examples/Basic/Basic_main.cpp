@@ -282,26 +282,32 @@ void doNothing() {
 }
 
 void digit1() {
-
+  int n = 123.456;
+  int firstdigit = n/100;
 }
 
 void digit2() {
-
+  int n = 123.456;
+  int seconddigit = ((int)n/10)%10;
 }
 
 void digit3() {
-
+  int n = 123.456;
+  int thirddigit = (int)n%10;
 }
 
 void digit4() {
-
+  int n = 123.456;
+  int firstdecimal = (((long)(n*1000))%1000)/100;
 }
 
 void digit5() {
-
+  int n = 123.456;
+  int seconddecimal = (int)(((long)(n*1000))%1000)/10%10;
 }
 
 void digit6() {
-
+  int n = 123.456;
+  int thirddecimal = (int)((long)(n*1000)%1000)%10;
 }
 
