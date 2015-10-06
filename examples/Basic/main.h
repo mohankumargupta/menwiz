@@ -49,5 +49,18 @@ void myuserscreen();
 void encoderButtonClicked();
 void encoderTurned();
 
+void setLatheMode();
+void setMillMode();
+void setMetric();
+void setImperial();
+void doNothing();
+void digit1();
+void digit2();
+void digit3();
+void digit4();
+void digit5();
+void digit6();
+
+
 #endif //BASIC_H
 
