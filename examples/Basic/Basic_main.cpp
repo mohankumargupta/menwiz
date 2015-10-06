@@ -91,11 +91,13 @@ void setup() {
   tree.addUsrNav(navigation,6);
   tree.showUsrScreen();
 
+  #ifdef TRELLIS_KEYPAD 
     for (uint8_t i=0; i<16; i++) {
-    keypad.clrLED(i);
-    keypad.writeDisplay();    
-    delay(50);
-  }
+      keypad.clrLED(i);
+      keypad.writeDisplay();    
+      delay(50);
+    }
+  #endif
 }
 
 void loop() {
@@ -144,26 +146,28 @@ void myuserscreen() {
   if (lathe_mill == LATHE) {
     strcpy(lcdchars, "LATHE(");
     strcat(lcdchars, MSG_UNITS[units]);
-    strcat(lcdchars, ")\n\nX         Y\n");
-    dtostrf(x, 6,2,   buf);
+    strcat(lcdchars, ")\nX:");
+    dtostrf(x, 7,3,   buf);
     strcat(lcdchars,buf);
-    strcat(lcdchars, "    ");
-    dtostrf(y, 6,2,   buf);
+    strcat(lcdchars, "\nY:");
+    dtostrf(y, 7,3,   buf);
     strcat(lcdchars,buf);
+    strcat(lcdchars, "\n");
   }
 
   else {
     strcpy(lcdchars, "MILL(");
     strcat(lcdchars, MSG_UNITS[units]);
-    strcat(lcdchars, ")\n\nX      Y      Z\n");
-    dtostrf(x, 5,1,   buf);
+    strcat(lcdchars, ")\nX:");
+    dtostrf(x, 7,3,   buf);
     strcat(lcdchars,buf);
-    strcat(lcdchars, "  ");
-    dtostrf(y, 5,1,   buf);
+    strcat(lcdchars, "\nY:");
+    dtostrf(y, 7,3,   buf);
     strcat(lcdchars,buf);
-    strcat(lcdchars, "  ");
-    dtostrf(z, 5,1,   buf);
+    strcat(lcdchars, "\nZ:");
+    dtostrf(z, 7,3,   buf);
     strcat(lcdchars,buf);
+    strcat(lcdchars,"\n");
   }
   
   tree.drawUsrScreen(lcdchars); 
@@ -171,14 +175,24 @@ void myuserscreen() {
 
 int navigation() {
 
+  
+
   if (encoderRotated == ENCODERROTATED_CLOCKWISE) {
     encoderRotated = ENCODERROTATED_NONE;
-    return MW_BTU;
+
+    if (tree.cur_menu->parent == 0) 
+      return  MW_BTU;
+    else 
+      return MW_BTL;
   }
   
   if (encoderRotated == ENCODERROTATED_ANTICLOCKWISE) { 
     encoderRotated = ENCODERROTATED_NONE;
-    return MW_BTD;
+
+    if (tree.cur_menu->parent == 0) 
+      return MW_BTD;
+    else
+      return MW_BTR;
   } 
     
   if (encoderClicked) {   
@@ -282,8 +296,19 @@ void doNothing() {
 }
 
 void digit1() {
-  int n = 123.456;
-  int firstdigit = n/100;
+  int n, firstdigit;
+
+  if (tree.cur_menu->parent != 0) {
+    if (tree.cur_menu->label == F("Preset X")) {
+      firstdigit = n/100;
+      if (firstdigit == 9) {
+        preset_x = preset_x - 900;
+      }
+      else
+        preset_x = preset_x + 100;
+    }
+    
+  }
 }
 
 void digit2() {
