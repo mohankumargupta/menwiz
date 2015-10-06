@@ -37,4 +37,7 @@
 // Uncomment if your LCD is 16x2
 //#define LCD_SIXTEENBYTWO
 
+// Uncomment for keypad support
+//#define TRELLIS_KEYPAD 
+
 #endif //CONFIGURATION_H

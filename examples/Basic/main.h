@@ -9,6 +9,9 @@
 #else
   #include <LiquidCrystal_I2C.h>
 #endif
+#ifdef TRELLIS_KEYPAD
+  #include "Adafruit_Trellis.h"
+#endif
 #define LIBCALL_ENABLEINTERRUPT
 #define EI_NOTEXTERNAL
 #include <EnableInterrupt.h>

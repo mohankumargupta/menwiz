@@ -7,4 +7,7 @@
 #else
   #include <LiquidCrystal_I2C.h>
 #endif
+#ifdef TRELLIS_KEYPAD
+  #include "Adafruit_Trellis.h"
+#endif
 #include <MENWIZ.h>
