@@ -90,6 +90,12 @@ void setup() {
   tree.addUsrScreen(myuserscreen,TIMEOUT_DELAY);
   tree.addUsrNav(navigation,6);
   tree.showUsrScreen();
+
+    for (uint8_t i=0; i<16; i++) {
+    keypad.clrLED(i);
+    keypad.writeDisplay();    
+    delay(50);
+  }
 }
 
 void loop() {
@@ -99,12 +105,18 @@ void loop() {
     if (keypad.readSwitches()) {
       for (uint8_t i=0; i<KEYPAD_KEYSCOUNT; i++) {
         if (keypad.justPressed(i)) {
+          Serial.print("keypad:");
+          Serial.println(i);
           keypad.setLED(i);
-          keyButtonAction[i];
+          keyButtonAction[i]();
+          keypad.writeDisplay();  
+          delay(50);
         }
 
         if (keypad.justReleased(i)) {
           keypad.clrLED(i);
+          keypad.writeDisplay();  
+          delay(50);
         }
       }
     }
@@ -254,6 +266,7 @@ void setLatheMode() {
 
 void setMillMode() {
   lathe_mill = MILL;
+  Serial.println("MILL");
 }
 
 void setMetric() {
@@ -291,3 +304,4 @@ void digit5() {
 void digit6() {
 
 }
+
