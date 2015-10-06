@@ -97,7 +97,7 @@ void loop() {
 
   #ifdef TRELLIS_KEYPAD
     if (keypad.readSwitches()) {
-      for (uint8_t i=0; i<numKeys; i++) {
+      for (uint8_t i=0; i<KEYPAD_KEYSCOUNT; i++) {
         if (keypad.justPressed(i)) {
           keypad.setLED(i);
           keyButtonAction[i];
