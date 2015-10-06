@@ -38,6 +38,10 @@
 #define ENCODERROTATED_CLOCKWISE 1
 #define ENCODERROTATED_ANTICLOCKWISE 2
 
+#define KEYPAD_INTPIN A2
+#define KEYPAD_KEYSCOUNT 16
+#define KEYPAD_I2CADDRESS 0x70
+
 int navigation();
 void zeroaxis();
 void exitMenu();

@@ -6,6 +6,11 @@
   LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 #endif
 
+#ifdef TRELLIS_KEYPAD
+  Adafruit_Trellis _keypad = Adafruit_Trellis();
+  Adafruit_TrellisSet keypad =  Adafruit_TrellisSet(&_keypad);
+  void (*keyButtonAction[KEYPAD_KEYSCOUNT])();
+#endif
 
 volatile int count=0;
 volatile int state;
@@ -38,6 +43,11 @@ void setup() {
   pinMode(ENCODER_B, INPUT_PULLUP);
   enableInterrupt(ENCODER_A, encoderTurned, CHANGE);
   enableInterrupt(ENCODER_B, encoderTurned, CHANGE);
+
+  #ifdef TRELLIS_KEYPAD
+    pinMode(KEYPAD_INTPIN, INPUT_PULLUP);
+    keypad.begin(KEYPAD_I2CADDRESS);
+  #endif
 
   Serial.begin(115200); 
   #ifdef LCD_SIXTEENBYTWO   
@@ -84,6 +94,21 @@ void setup() {
 
 void loop() {
   tree.draw();
+
+  #ifdef TRELLIS_KEYPAD
+    if (keypad.readSwitches()) {
+      for (uint8_t i=0; i<numKeys; i++) {
+        if (keypad.justPressed(i)) {
+          keypad.setLED(i);
+          keyButtonAction[i];
+        }
+
+        if (keypad.justReleased(i)) {
+          keypad.clrLED(i);
+        }
+      }
+    }
+  #endif
 
   newPosition = count;
   if (newPosition != oldPosition) {
@@ -154,7 +179,6 @@ int navigation() {
    return MW_BTE;
   }
 
-  
   if (Serial.available()) {
     byte read = Serial.read();
     switch (read) {
@@ -222,4 +246,20 @@ void encoderTurned() {
       count -= 2; break;
   }
   state = (s >> 2);
+}
+
+void setLatheMode() {
+  lathe_mill = LATHE;
+}
+
+void setMillMode() {
+  lathe_mill = MILL;
+}
+
+void setMetric() {
+  units = METRIC;
+}
+
+void setImperial() {
+  units = IMPERIAL;
 }
