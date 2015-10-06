@@ -9,7 +9,7 @@
 #ifdef TRELLIS_KEYPAD
   Adafruit_Trellis _keypad = Adafruit_Trellis();
   Adafruit_TrellisSet keypad =  Adafruit_TrellisSet(&_keypad);
-  void (*keyButtonAction[KEYPAD_KEYSCOUNT])() = {setLatheMode, setMillMode, setMetric, setImperial};
+  void (*keyButtonAction[KEYPAD_KEYSCOUNT])() = {setLatheMode, setMillMode, setMetric, setImperial, digit1, digit2, digit3, digit4, digit5, digit6,doNothing,doNothing,doNothing,doNothing,doNothing,doNothing};
 #endif
 
 volatile int count=0;
@@ -262,4 +262,32 @@ void setMetric() {
 
 void setImperial() {
   units = IMPERIAL;
+}
+
+void doNothing() {
+
+}
+
+void digit1() {
+
+}
+
+void digit2() {
+
+}
+
+void digit3() {
+
+}
+
+void digit4() {
+
+}
+
+void digit5() {
+
+}
+
+void digit6() {
+
 }
