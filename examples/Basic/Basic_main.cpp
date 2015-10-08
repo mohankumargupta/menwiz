@@ -9,7 +9,7 @@
 #ifdef TRELLIS_KEYPAD
   Adafruit_Trellis _keypad = Adafruit_Trellis();
   Adafruit_TrellisSet keypad =  Adafruit_TrellisSet(&_keypad);
-  void (*keyButtonAction[KEYPAD_KEYSCOUNT])() = {setLatheMode, setMillMode, setMetric, setImperial, digit1, digit2, digit3, digit4, digit5, digit6,doNothing,doNothing,doNothing,doNothing,doNothing,doNothing};
+  void (*keyButtonAction[KEYPAD_KEYSCOUNT])() = {setLatheMode, setMillMode, setMetric, setImperial, digit1, digit2, digit3, digit4, digit5, digit6,doNothing,doNothing,doNothing,doNothing,escapeButton,enterButton};
 #endif
 
 volatile int count=0;
@@ -27,11 +27,14 @@ bool displayUsrScreenImmediately = false;
 char lcdchars[80];
 char buf[20];
 
+bool pressEnterKey = false, pressEscapeKey = false;
+
 bool encoderClicked = false;
 volatile int encoderRotated = ENCODERROTATED_NONE;
 
 menwiz tree;
 volatile int countX=0, countY=0, countZ=0;
+volatile long longCountX=0L, longCountY=0L, longCountZ=0L;
 volatile float x,y,z;
 float preset_x=-0.5, preset_y=-0.5, preset_z=-0.5; 
 _menu *r,*s0,*s1,*s2, *s3, *s4, *q4, *p1,*p2,*p3,*p4;
@@ -122,6 +125,7 @@ void loop() {
         }
       }
     }
+
   #endif
 
   newPosition = count;
@@ -142,12 +146,13 @@ void loop() {
 
 void myuserscreen() {
   float x=countX/CONVERT_UNITS[units],y=countY/CONVERT_UNITS[units],z=countZ/CONVERT_UNITS[units];
+  float longx = longCountX/(CONVERT_UNITS[units]*10);
 
   if (lathe_mill == LATHE) {
     strcpy(lcdchars, "LATHE(");
     strcat(lcdchars, MSG_UNITS[units]);
     strcat(lcdchars, ")\nX:");
-    dtostrf(x, 7,3,   buf);
+    dtostrf(longx, 7,3,   buf);
     strcat(lcdchars,buf);
     strcat(lcdchars, "\nY:");
     dtostrf(y, 7,3,   buf);
@@ -159,7 +164,7 @@ void myuserscreen() {
     strcpy(lcdchars, "MILL(");
     strcat(lcdchars, MSG_UNITS[units]);
     strcat(lcdchars, ")\nX:");
-    dtostrf(x, 7,3,   buf);
+    dtostrf(longx, 7,3,   buf);
     strcat(lcdchars,buf);
     strcat(lcdchars, "\nY:");
     dtostrf(y, 7,3,   buf);
@@ -205,6 +210,18 @@ int navigation() {
    return MW_BTE;
   }
 
+  if (pressEscapeKey) {
+    pressEscapeKey = false;
+    return MW_BTE;
+  }
+
+  if (pressEnterKey) {
+    pressEnterKey = false;
+    return MW_BTC;
+  }
+
+
+
   if (Serial.available()) {
     byte read = Serial.read();
     switch (read) {
@@ -219,15 +236,18 @@ int navigation() {
 
   else if (preset_x + preset_y + preset_z + 1.5 > 0.01 && tree.cur_menu->parent == 0) {
     if (preset_x - 0.5 > 0.01) {
-      countX = round(preset_x * CONVERT_UNITS[units] ); 
+      countX = round(preset_x * CONVERT_UNITS[units] );
+      longCountX = 10 * countX; 
     }
  
     else if (preset_y - 0.5 > 0.01) {
-      countY = round(preset_y * CONVERT_UNITS[units] ); 
+      countY = round(preset_y * CONVERT_UNITS[units] );
+      longCountY = 10 * countY; 
     }
 
     else if (preset_z  - 0.5 > 0.01) {
-      countZ = round(preset_z * CONVERT_UNITS[units] ); 
+      countZ = round(preset_z * CONVERT_UNITS[units] );
+      longCountZ = 10 * countZ; 
     }
 
     preset_x = -0.5;
@@ -317,8 +337,10 @@ void digit2() {
 }
 
 void digit3() {
-  int n = 123.456;
-  int thirddigit = (int)n%10;
+  float x=longCountX/(CONVERT_UNITS[units] * 10.0);
+  int thirddigit = (int)x%10;
+  x = x + 1.0;
+  longCountX = x * (CONVERT_UNITS[units] * 10);
 }
 
 void digit4() {
@@ -336,3 +358,10 @@ void digit6() {
   int thirddecimal = (int)((long)(n*1000)%1000)%10;
 }
 
+void escapeButton() {
+  pressEscapeKey = true;
+}
+
+void enterButton() {
+  pressEnterKey = true;
+}

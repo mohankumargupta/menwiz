@@ -61,6 +61,8 @@ void digit4();
 void digit5();
 void digit6();
 
+void enterButton();
+void escapeButton();
 
 #endif //BASIC_H
 
