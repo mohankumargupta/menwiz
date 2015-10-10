@@ -264,6 +264,9 @@ void zeroaxis() {
   countX = 0;
   countY = 0;
   countZ = 0;
+  longCountX = 0;
+  longCountY = 0;
+  longCountZ = 0;
   displayUsrScreenImmediately=true;
 }
 
