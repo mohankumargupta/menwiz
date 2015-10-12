@@ -38,6 +38,6 @@
 //#define LCD_SIXTEENBYTWO
 
 // Uncomment for keypad support
-//#define TRELLIS_KEYPAD 
+#define TRELLIS_KEYPAD 
 
 #endif //CONFIGURATION_H

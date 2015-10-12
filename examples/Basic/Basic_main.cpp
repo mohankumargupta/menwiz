@@ -9,7 +9,7 @@
 #ifdef TRELLIS_KEYPAD
   Adafruit_Trellis _keypad = Adafruit_Trellis();
   Adafruit_TrellisSet keypad =  Adafruit_TrellisSet(&_keypad);
-  void (*keyButtonAction[KEYPAD_KEYSCOUNT])() = {setLatheMode, setMillMode, setMetric, setImperial, digit1, digit2, digit3, digit4, digit5, digit6,doNothing,doNothing,doNothing,doNothing,escapeButton,enterButton};
+  void (*keyButtonAction[KEYPAD_KEYSCOUNT])() = {setLatheMode, setMillMode, setMetric, setImperial, digit1, digit2, digit3, digit4, digit5, digit6,doNothing,doNothing,doNothing,zeroaxis,escapeButton,enterButton};
 #endif
 
 volatile int count=0;
@@ -110,8 +110,8 @@ void loop() {
     if (keypad.readSwitches()) {
       for (uint8_t i=0; i<KEYPAD_KEYSCOUNT; i++) {
         if (keypad.justPressed(i)) {
-          Serial.print("keypad:");
-          Serial.println(i);
+          //Serial.print("keypad:");
+          //Serial.println(i);
           keypad.setLED(i);
           keyButtonAction[i]();
           keypad.writeDisplay();  
@@ -268,6 +268,7 @@ void zeroaxis() {
   longCountY = 0;
   longCountZ = 0;
   displayUsrScreenImmediately=true;
+  pressEnterKey = true;
 }
 
 void exitMenu() {
@@ -303,7 +304,7 @@ void setLatheMode() {
 
 void setMillMode() {
   lathe_mill = MILL;
-  Serial.println("MILL");
+  //Serial.println("MILL");
 }
 
 void setMetric() {
@@ -318,7 +319,16 @@ void doNothing() {
 
 }
 
+
 void digit1() {
+  float x=longCountX/(CONVERT_UNITS[units] * 10.0);
+  //Serial.println(x);
+  x = x + 100.0 ;
+  if (x >= 1000.0) {
+    x -= 1000;  
+  }
+  longCountX = x* (CONVERT_UNITS[units] * 10);
+  /*
   int n, firstdigit;
 
   if (tree.cur_menu->parent != 0) {
@@ -332,17 +342,29 @@ void digit1() {
     }
     
   }
+  */
 }
 
 void digit2() {
-  int n = 123.456;
-  int seconddigit = ((int)n/10)%10;
+  float x=longCountX/(CONVERT_UNITS[units] * 10.0);
+  float seconddigit = ((int)x/10)%10;
+  if (seconddigit == 9) {
+     x = x - 90.0;
+  }
+
+  else
+     x = x + 10.0;
+     
+  longCountX = x * (CONVERT_UNITS[units] * 10);
 }
 
 void digit3() {
   float x=longCountX/(CONVERT_UNITS[units] * 10.0);
-  int thirddigit = (int)x%10;
-  x = x + 1.0;
+  float thirddigit = (int)x%10;
+  if (thirddigit == 9)
+    x = x - 9.0;
+  else 
+    x = x + 1.0;
   longCountX = x * (CONVERT_UNITS[units] * 10);
 }
 
