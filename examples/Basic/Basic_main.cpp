@@ -9,7 +9,7 @@
 #ifdef TRELLIS_KEYPAD
   Adafruit_Trellis _keypad = Adafruit_Trellis();
   Adafruit_TrellisSet keypad =  Adafruit_TrellisSet(&_keypad);
-  void (*keyButtonAction[KEYPAD_KEYSCOUNT])() = {setLatheMode, setMillMode, setMetric, setImperial, digit1, digit2, digit3, digit4, digit5, digit6,doNothing,doNothing,doNothing,zeroaxis,escapeButton,enterButton};
+  void (*keyButtonAction[KEYPAD_KEYSCOUNT])() = {setLatheMode, setMillMode, setMetric, setImperial, digit1, digit2, digit3, digit4, digit5, digit6,presetX,presetY,presetZ,zeroaxis,escapeButton,enterButton};
 #endif
 
 volatile int count=0;
@@ -35,6 +35,7 @@ volatile int encoderRotated = ENCODERROTATED_NONE;
 menwiz tree;
 volatile int countX=0, countY=0, countZ=0;
 volatile long longCountX=0L, longCountY=0L, longCountZ=0L;
+volatile long *ptrPresetCount = &longCountX;
 volatile float x,y,z;
 float preset_x=-0.5, preset_y=-0.5, preset_z=-0.5; 
 _menu *r,*s0,*s1,*s2, *s3, *s4, *q4, *p1,*p2,*p3,*p4;
@@ -147,6 +148,8 @@ void loop() {
 void myuserscreen() {
   float x=countX/CONVERT_UNITS[units],y=countY/CONVERT_UNITS[units],z=countZ/CONVERT_UNITS[units];
   float longx = longCountX/(CONVERT_UNITS[units]*10);
+  float longy = longCountY/(CONVERT_UNITS[units]*10);
+  float longz = longCountZ/(CONVERT_UNITS[units]*10);
 
   if (lathe_mill == LATHE) {
     strcpy(lcdchars, "LATHE(");
@@ -155,7 +158,7 @@ void myuserscreen() {
     dtostrf(longx, 7,3,   buf);
     strcat(lcdchars,buf);
     strcat(lcdchars, "\nY:");
-    dtostrf(y, 7,3,   buf);
+    dtostrf(longy, 7,3,   buf);
     strcat(lcdchars,buf);
     strcat(lcdchars, "\n");
   }
@@ -167,10 +170,10 @@ void myuserscreen() {
     dtostrf(longx, 7,3,   buf);
     strcat(lcdchars,buf);
     strcat(lcdchars, "\nY:");
-    dtostrf(y, 7,3,   buf);
+    dtostrf(longy, 7,3,   buf);
     strcat(lcdchars,buf);
     strcat(lcdchars, "\nZ:");
-    dtostrf(z, 7,3,   buf);
+    dtostrf(longz, 7,3,   buf);
     strcat(lcdchars,buf);
     strcat(lcdchars,"\n");
   }
@@ -321,13 +324,13 @@ void doNothing() {
 
 
 void digit1() {
-  float x=longCountX/(CONVERT_UNITS[units] * 10.0);
+  float x=(*ptrPresetCount)/(CONVERT_UNITS[units] * 10.0);
   //Serial.println(x);
   x = x + 100.0 ;
   if (x >= 1000.0) {
     x -= 1000;  
   }
-  longCountX = x* (CONVERT_UNITS[units] * 10);
+  *ptrPresetCount = x* (CONVERT_UNITS[units] * 10);
   /*
   int n, firstdigit;
 
@@ -346,7 +349,7 @@ void digit1() {
 }
 
 void digit2() {
-  float x=longCountX/(CONVERT_UNITS[units] * 10.0);
+  float x=(*ptrPresetCount)/(CONVERT_UNITS[units] * 10.0);
   float seconddigit = ((int)x/10)%10;
   if (seconddigit == 9) {
      x = x - 90.0;
@@ -355,17 +358,17 @@ void digit2() {
   else
      x = x + 10.0;
      
-  longCountX = x * (CONVERT_UNITS[units] * 10);
+  *ptrPresetCount = x * (CONVERT_UNITS[units] * 10);
 }
 
 void digit3() {
-  float x=longCountX/(CONVERT_UNITS[units] * 10.0);
+  float x=(*ptrPresetCount)/(CONVERT_UNITS[units] * 10.0);
   float thirddigit = (int)x%10;
   if (thirddigit == 9)
     x = x - 9.0;
   else 
     x = x + 1.0;
-  longCountX = x * (CONVERT_UNITS[units] * 10);
+  *ptrPresetCount = x * (CONVERT_UNITS[units] * 10);
 }
 
 void digit4() {
@@ -389,4 +392,16 @@ void escapeButton() {
 
 void enterButton() {
   pressEnterKey = true;
+}
+
+void presetX() {
+  ptrPresetCount = &longCountX;
+}
+
+void presetY() {
+  ptrPresetCount = &longCountY;
+}
+
+void presetZ() {
+  ptrPresetCount = &longCountZ;
 }

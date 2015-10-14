@@ -64,5 +64,9 @@ void digit6();
 void enterButton();
 void escapeButton();
 
+void presetX();
+void presetY();
+void presetZ();
+
 #endif //BASIC_H
 
