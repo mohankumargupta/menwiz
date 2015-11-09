@@ -9,14 +9,13 @@
 #define CONVERT_SOMETHING3 1.0
 
 // Encoder Ports - XYZ Axis linear encoders 
-//#define ENCODERX_PINA 6
-//#define ENCODERX_PINB 7
-//#define ENCODERX_PINA 2
-//#define ENCODERX_PINB 3
-//#define ENCODERY_PINA 4
-//#define ENCODERY_PINB 5
-//#define ENCODERZ_PINA 6
-//#define ENCODERZ_PINB 7
+#define ENCODERX_PINA 2
+#define ENCODERX_PINB 3
+#define ENCODERY_PINA 4
+#define ENCODERY_PINB 5
+#define ENCODERZ_PINA 6
+#define ENCODERZ_PINB 7
+
 #define ENCODER_A 6
 #define ENCODER_B 7
 #define ENCODER_BUTTON 8
@@ -35,9 +34,9 @@
 #define LCD_D7 7
 
 // Uncomment if your LCD is 16x2
-//#define LCD_SIXTEENBYTWO
+#define LCD_SIXTEENBYTWO
 
 // Uncomment for keypad support
-#define TRELLIS_KEYPAD 
+//#define TRELLIS_KEYPAD 
 
 #endif //CONFIGURATION_H

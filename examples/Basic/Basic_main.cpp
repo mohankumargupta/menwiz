@@ -1,7 +1,7 @@
 #include "main.h"
 
 #ifdef LCD_PARALLEL
-  LiquidCrystal lcd(LCD_ADDRESS,LCD_RS,LCD_EN,LCD_D4,LCD_D5,LCD_D6,LCD_D7);
+  LiquidCrystal lcd(LCD_RS,LCD_EN,LCD_D4,LCD_D5,LCD_D6,LCD_D7);
 #else
   LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 #endif
@@ -47,6 +47,17 @@ void setup() {
   pinMode(ENCODER_B, INPUT_PULLUP);
   enableInterrupt(ENCODER_A, encoderTurned, CHANGE);
   enableInterrupt(ENCODER_B, encoderTurned, CHANGE);
+
+  pinMode(ENCODERX_PINA, INPUT_PULLUP);
+  pinMode(ENCODERX_PINB, INPUT_PULLUP);
+  pinMode(ENCODERY_PINA, INPUT_PULLUP);
+  pinMode(ENCODERY_PINB, INPUT_PULLUP);
+  pinMode(ENCODERZ_PINA, INPUT_PULLUP);
+  pinMode(ENCODERZ_PINB, INPUT_PULLUP);
+
+  enableInterrupt(ENCODERX_PINA, encoderXinterrupt, CHANGE);
+  enableInterrupt(ENCODERY_PINA, encoderYinterrupt, CHANGE);
+  enableInterrupt(ENCODERZ_PINA, encoderZinterrupt, CHANGE);
 
   #ifdef TRELLIS_KEYPAD
     pinMode(KEYPAD_INTPIN, INPUT_PULLUP);
@@ -404,4 +415,35 @@ void presetY() {
 
 void presetZ() {
   ptrPresetCount = &longCountZ;
+}
+
+
+void encoderXinterrupt() {
+  if (digitalRead(ENCODERX_PINA) == digitalRead(ENCODERX_PINB)) {
+    longCountX++;
+  }
+
+  else {
+    longCountX--;
+  }
+}
+
+void encoderYinterrupt() {
+  if (digitalRead(ENCODERY_PINA) == digitalRead(ENCODERY_PINB)) {
+    longCountY++;
+  }
+
+  else {
+    longCountY--;
+  }
+}
+
+void encoderZinterrupt() {
+  if (digitalRead(ENCODERZ_PINA) == digitalRead(ENCODERZ_PINB)) {
+    longCountZ++;
+  }
+
+  else {
+    longCountZ--;
+  }
 }

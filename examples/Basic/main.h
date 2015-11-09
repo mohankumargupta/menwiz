@@ -68,5 +68,9 @@ void presetX();
 void presetY();
 void presetZ();
 
+void encoderXinterrupt();
+void encoderYinterrupt();
+void encoderZinterrupt();
+
 #endif //BASIC_H
 
