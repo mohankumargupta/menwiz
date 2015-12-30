@@ -16,9 +16,9 @@
 #define ENCODERZ_PINA 6
 #define ENCODERZ_PINB 7
 
-#define ENCODER_A 6
-#define ENCODER_B 7
-#define ENCODER_BUTTON 8
+#define ENCODER_A 8
+#define ENCODER_B 9
+#define ENCODER_BUTTON 10
 
 //Comment out the following if you are using I2C LCD
 //Uncomment out the following if you are using parallel LCD 
@@ -37,6 +37,10 @@
 #define LCD_SIXTEENBYTWO
 
 // Uncomment for keypad support
-//#define TRELLIS_KEYPAD 
+#define TRELLIS_KEYPAD 
+
+#define PRESET_MIN 0.0
+#define PRESET_MAX 1000.0
+#define PRESET_INCREMENT 0.1
 
 #endif //CONFIGURATION_H

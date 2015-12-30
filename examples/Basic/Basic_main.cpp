@@ -9,7 +9,7 @@
 #ifdef TRELLIS_KEYPAD
   Adafruit_Trellis _keypad = Adafruit_Trellis();
   Adafruit_TrellisSet keypad =  Adafruit_TrellisSet(&_keypad);
-  void (*keyButtonAction[KEYPAD_KEYSCOUNT])() = {setLatheMode, setMillMode, setMetric, setImperial, digit1, digit2, digit3, digit4, digit5, digit6,presetX,presetY,presetZ,zeroaxis,escapeButton,enterButton};
+  void (*keyButtonAction[KEYPAD_KEYSCOUNT])() = {setLatheMode, setMillMode, setMetric, setImperial, presetX, digit1, digit2, digit3, presetY, digit4, digit5, digit6,presetZ,zeroaxis,escapeButton,enterButton};
 #endif
 
 volatile int count=0;
@@ -108,7 +108,7 @@ void setup() {
 
   #ifdef TRELLIS_KEYPAD 
     for (uint8_t i=0; i<16; i++) {
-      keypad.clrLED(i);
+      keypad.setLED(i);
       keypad.writeDisplay();    
       delay(50);
     }
@@ -124,17 +124,19 @@ void loop() {
         if (keypad.justPressed(i)) {
           //Serial.print("keypad:");
           //Serial.println(i);
-          keypad.setLED(i);
+          //keypad.setLED(i);
           keyButtonAction[i]();
-          keypad.writeDisplay();  
+          //keypad.writeDisplay();  
           delay(50);
         }
 
+        /*
         if (keypad.justReleased(i)) {
-          keypad.clrLED(i);
-          keypad.writeDisplay();  
+          //keypad.clrLED(i);
+          //keypad.writeDisplay();  
           delay(50);
         }
+        */
       }
     }
 
