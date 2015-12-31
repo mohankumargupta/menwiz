@@ -92,7 +92,24 @@ void setup() {
            s2->addVar(MW_LIST, &lathe_mode);
            s2->addItem(MW_LIST, F("LATHEMODE_DEFAULT"));
            s2->addItem(MW_LIST, F("LATHEMODE_RADIUS"));                         
-
+      s3 = tree.addMenu(MW_SUBMENU, r, F("STORE TOOL"));
+           p1 = tree.addMenu(MW_VAR, s3, F("TOOL1"));
+           p1->addVar(MW_ACTION, store_tool1);
+           p2 = tree.addMenu(MW_VAR, s3, F("TOOL2"));
+           p2->addVar(MW_ACTION, store_tool2);
+           p3 = tree.addMenu(MW_VAR, s3, F("TOOL3"));
+           p3->addVar(MW_ACTION, store_tool3);
+           p4 = tree.addMenu(MW_VAR, s3, F("TOOL4"));
+           p4->addVar(MW_ACTION, store_tool4);                                 
+      s4 = tree.addMenu(MW_SUBMENU, r, F("LOAD TOOL"));
+           p1 = tree.addMenu(MW_VAR, s4, F("TOOL1"));
+           p1->addVar(MW_ACTION, load_tool1);
+           p2 = tree.addMenu(MW_VAR, s4, F("TOOL2"));
+           p2->addVar(MW_ACTION, load_tool2);
+           p3 = tree.addMenu(MW_VAR, s4, F("TOOL3"));
+           p3->addVar(MW_ACTION, load_tool3);
+           p4 = tree.addMenu(MW_VAR, s4, F("TOOL4"));
+           p4->addVar(MW_ACTION, load_tool4); 
 
   tree.addUsrScreen(myuserscreen,TIMEOUT_DELAY);
   tree.addUsrNav(navigation,6);
@@ -391,6 +408,39 @@ void decimalPointButton() {
 void loadToolButton() {
   
 }
+
+void store_tool1() {
+
+}
+
+void store_tool2() {
+  
+}
+
+void store_tool3() {
+  
+}
+
+void store_tool4() {
+  
+}
+
+void load_tool1() {
+}  
+
+
+void load_tool2() {
+  
+}
+
+void load_tool3() {
+  
+}
+
+void load_tool4() {
+  
+}
+
 
 void escapeButton() {
   pressEscapeKey = true;
