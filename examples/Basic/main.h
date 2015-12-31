@@ -42,6 +42,14 @@
 #define CONST_PRESET_Y 1
 #define CONST_PRESET_Z 2
 
+#define LATHE_METRIC 0
+#define LATHE_IMPERIAL 1
+#define MILL_METRIC 2
+#define MILL_IMPERIAL 3
+
+#define LATHEMODE_DEFAULT 0
+#define LATHEMODE_RADIUS 1 
+
 
 int navigation();
 void zeroaxis();

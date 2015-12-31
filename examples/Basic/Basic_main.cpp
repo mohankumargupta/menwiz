@@ -42,6 +42,8 @@ int current_preset = CONST_PRESET_X;
 int current_preset_pos = 0;
 float preset_x=-0.5, preset_y=-0.5, preset_z=-0.5; 
 _menu *r,*s0,*s1,*s2, *s3, *s4, *q4, *p1,*p2,*p3,*p4;
+int machine_mode = LATHE_METRIC;
+int lathe_mode = LATHEMODE_DEFAULT;
 
 void setup() {
   pinMode(ENCODER_BUTTON, INPUT_PULLUP);
@@ -79,31 +81,18 @@ void setup() {
   r = tree.addMenu(MW_ROOT,NULL,F("MAIN MENU")); 
       s0 = tree.addMenu(MW_VAR, r, F("Info Screen"));
            s0->addVar(MW_ACTION, exitMenu);
-           s0->setBehaviour(MW_ACTION_CONFIRM, false);           
-      s1 = tree.addMenu(MW_VAR, r, F("Zero Axis"));
-           s1->addVar(MW_ACTION, zeroaxis);
-           s1->setBehaviour(MW_ACTION_CONFIRM, false);
-      s2 = tree.addMenu(MW_SUBMENU, r, F("Preset XYZ"));
-           p1 = tree.addMenu(MW_VAR, s2, F("Back to Menu") );
-                p1->addVar(MW_ACTION, exitMenu);
-                p1->setBehaviour(MW_ACTION_CONFIRM, false);
-           p2 = tree.addMenu(MW_VAR, s2, F("Preset X"));
-                p2->addVar(MW_AUTO_FLOAT, &preset_x, PRESET_MIN, PRESET_MAX, PRESET_INCREMENT);
-           p3 = tree.addMenu(MW_VAR, s2, F("Preset Y"));
-                p3->addVar(MW_AUTO_FLOAT, &preset_y, PRESET_MIN, PRESET_MAX, PRESET_INCREMENT);
-           p4 = tree.addMenu(MW_VAR, s2, F("Preset Z"));
-                p3->addVar(MW_AUTO_FLOAT, &preset_z, PRESET_MIN, PRESET_MAX, PRESET_INCREMENT);
-      s3 = tree.addMenu(MW_VAR, r, F("Change Units"));
-           s3->addVar(MW_LIST, &units);
-           s3->addItem(MW_LIST, F("METRIC"));
-           s3->addItem(MW_LIST, F("IMPERIAL"));
-           s3->addItem(MW_LIST, F("SOMETHING1"));
-           s3->addItem(MW_LIST, F("SOMETHING2"));
-           s3->addItem(MW_LIST, F("SOMETHING3"));
-      s4 = tree.addMenu(MW_VAR, r, F("Lathe or Mill"));;
-           s4->addVar(MW_LIST, &lathe_mill);
-           s4->addItem(MW_LIST, F("Lathe"));
-           s4->addItem(MW_LIST, F("Mill"));
+           s0->setBehaviour(MW_ACTION_CONFIRM, false);  
+      s1 = tree.addMenu(MW_VAR, r, F("Change Mode"));
+           s1->addVar(MW_LIST, &machine_mode);
+           s1->addItem(MW_LIST, F("LATHE_METRIC"));
+           s1->addItem(MW_LIST, F("LATHE_IMPERIAL"));
+           s1->addItem(MW_LIST, F("MILL_METRIC"));
+           s1->addItem(MW_LIST, F("MILL_IMPERIAL"));          
+      s2 = tree.addMenu(MW_VAR, r, F("Lathe Mode"));
+           s2->addVar(MW_LIST, &lathe_mode);
+           s2->addItem(MW_LIST, F("LATHEMODE_DEFAULT"));
+           s2->addItem(MW_LIST, F("LATHEMODE_RADIUS"));                         
+
 
   tree.addUsrScreen(myuserscreen,TIMEOUT_DELAY);
   tree.addUsrNav(navigation,6);
@@ -125,21 +114,10 @@ void loop() {
     if (keypad.readSwitches()) {
       for (uint8_t i=0; i<KEYPAD_KEYSCOUNT; i++) {
         if (keypad.justPressed(i)) {
-          //Serial.print("keypad:");
-          //Serial.println(i);
-          //keypad.setLED(i);
-          keyButtonAction[i]();
-          //keypad.writeDisplay();  
+          keyButtonAction[i]();  
           delay(50);
         }
 
-        /*
-        if (keypad.justReleased(i)) {
-          //keypad.clrLED(i);
-          //keypad.writeDisplay();  
-          delay(50);
-        }
-        */
       }
     }
 
@@ -166,6 +144,25 @@ void myuserscreen() {
   float longx = longCountX/(CONVERT_UNITS[units]*10);
   float longy = longCountY/(CONVERT_UNITS[units]*10);
   float longz = longCountZ/(CONVERT_UNITS[units]*10);
+
+  switch(machine_mode) {
+    case LATHE_METRIC:
+      lathe_mill = LATHE;
+      units = METRIC;
+      break;
+    case LATHE_IMPERIAL:
+      lathe_mill = LATHE;
+      units = IMPERIAL;
+      break;
+    case MILL_METRIC:
+      lathe_mill = MILL;
+      units = METRIC;
+      break;
+    case MILL_IMPERIAL:
+      lathe_mill = MILL;
+      units = IMPERIAL;
+      break;
+  }
 
   if (lathe_mill == LATHE) {
     strcpy(lcdchars, "LATHE(");
