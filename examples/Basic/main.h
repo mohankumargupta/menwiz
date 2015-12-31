@@ -30,10 +30,6 @@
 
 #define TIMEOUT_DELAY 10000
 
-#define PRESET_MIN 0.0
-#define PRESET_MAX 1000.0
-#define PRESET_INCREMENT 0.5
-
 #define ENCODERROTATED_NONE 0
 #define ENCODERROTATED_CLOCKWISE 1
 #define ENCODERROTATED_ANTICLOCKWISE 2
@@ -41,6 +37,11 @@
 #define KEYPAD_INTPIN A2
 #define KEYPAD_KEYSCOUNT 16
 #define KEYPAD_I2CADDRESS 0x70
+
+#define CONST_PRESET_X 0
+#define CONST_PRESET_Y 1
+#define CONST_PRESET_Z 2
+
 
 int navigation();
 void zeroaxis();
@@ -54,12 +55,18 @@ void setMillMode();
 void setMetric();
 void setImperial();
 void doNothing();
+void digit0();
 void digit1();
 void digit2();
 void digit3();
 void digit4();
 void digit5();
 void digit6();
+void digit7();
+void digit8();
+void digit9();
+void loadToolButton();
+void decimalPointButton();
 
 void enterButton();
 void escapeButton();

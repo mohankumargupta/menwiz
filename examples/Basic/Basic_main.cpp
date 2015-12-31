@@ -9,7 +9,8 @@
 #ifdef TRELLIS_KEYPAD
   Adafruit_Trellis _keypad = Adafruit_Trellis();
   Adafruit_TrellisSet keypad =  Adafruit_TrellisSet(&_keypad);
-  void (*keyButtonAction[KEYPAD_KEYSCOUNT])() = {setLatheMode, setMillMode, setMetric, setImperial, presetX, digit1, digit2, digit3, presetY, digit4, digit5, digit6,presetZ,zeroaxis,escapeButton,enterButton};
+  //void (*keyButtonAction[KEYPAD_KEYSCOUNT])() = {setLatheMode, setMillMode, setMetric, setImperial, presetX, digit1, digit2, digit3, presetY, digit4, digit5, digit6,presetZ,zeroaxis,escapeButton,enterButton};
+  void (*keyButtonAction[KEYPAD_KEYSCOUNT])() = {presetX, digit1, digit2, digit3, presetY, digit4, digit5, digit6,presetZ,digit7, digit8, digit9,loadToolButton,decimalPointButton,digit0,enterButton};
 #endif
 
 volatile int count=0;
@@ -37,6 +38,8 @@ volatile int countX=0, countY=0, countZ=0;
 volatile long longCountX=0L, longCountY=0L, longCountZ=0L;
 volatile long *ptrPresetCount = &longCountX;
 volatile float x,y,z;
+int current_preset = CONST_PRESET_X;
+int current_preset_pos = 0;
 float preset_x=-0.5, preset_y=-0.5, preset_z=-0.5; 
 _menu *r,*s0,*s1,*s2, *s3, *s4, *q4, *p1,*p2,*p3,*p4;
 
@@ -336,67 +339,60 @@ void doNothing() {
 }
 
 
-void digit1() {
+void handleDigit(int digit) {
   float x=(*ptrPresetCount)/(CONVERT_UNITS[units] * 10.0);
-  //Serial.println(x);
-  x = x + 100.0 ;
-  if (x >= 1000.0) {
-    x -= 1000;  
-  }
+  float increment = (float) pow(10, 2 - current_preset_pos);
+  x = x + increment;
   *ptrPresetCount = x* (CONVERT_UNITS[units] * 10);
-  /*
-  int n, firstdigit;
+  current_preset_pos = (current_preset_pos + 1) % 6;
+}
 
-  if (tree.cur_menu->parent != 0) {
-    if (tree.cur_menu->label == F("Preset X")) {
-      firstdigit = n/100;
-      if (firstdigit == 9) {
-        preset_x = preset_x - 900;
-      }
-      else
-        preset_x = preset_x + 100;
-    }
-    
-  }
-  */
+void digit1() {
+  handleDigit(1);
 }
 
 void digit2() {
-  float x=(*ptrPresetCount)/(CONVERT_UNITS[units] * 10.0);
-  float seconddigit = ((int)x/10)%10;
-  if (seconddigit == 9) {
-     x = x - 90.0;
-  }
-
-  else
-     x = x + 10.0;
-     
-  *ptrPresetCount = x * (CONVERT_UNITS[units] * 10);
+  handleDigit(2);
 }
 
 void digit3() {
-  float x=(*ptrPresetCount)/(CONVERT_UNITS[units] * 10.0);
-  float thirddigit = (int)x%10;
-  if (thirddigit == 9)
-    x = x - 9.0;
-  else 
-    x = x + 1.0;
-  *ptrPresetCount = x * (CONVERT_UNITS[units] * 10);
+  handleDigit(3);
 }
 
 void digit4() {
-  int n = 123.456;
-  int firstdecimal = (((long)(n*1000))%1000)/100;
+  handleDigit(4);
 }
 
 void digit5() {
-  int n = 123.456;
-  int seconddecimal = (int)(((long)(n*1000))%1000)/10%10;
+  handleDigit(5);
 }
 
 void digit6() {
-  int n = 123.456;
-  int thirddecimal = (int)((long)(n*1000)%1000)%10;
+  handleDigit(6);
+}
+
+void digit7() {
+  handleDigit(7);
+}
+
+void digit8() {
+  handleDigit(8);
+}
+
+void digit9() {
+  handleDigit(9);
+}
+
+void digit0() {
+  handleDigit(0);
+}
+
+void decimalPointButton() {
+  current_preset_pos = 3;
+}
+
+void loadToolButton() {
+  
 }
 
 void escapeButton() {
@@ -409,14 +405,17 @@ void enterButton() {
 
 void presetX() {
   ptrPresetCount = &longCountX;
+  *ptrPresetCount = 0;
 }
 
 void presetY() {
   ptrPresetCount = &longCountY;
+  *ptrPresetCount = 0;
 }
 
 void presetZ() {
   ptrPresetCount = &longCountZ;
+  *ptrPresetCount = 0;
 }
 
 
