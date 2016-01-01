@@ -10,7 +10,7 @@
   Adafruit_Trellis _keypad = Adafruit_Trellis();
   Adafruit_TrellisSet keypad =  Adafruit_TrellisSet(&_keypad);
   //void (*keyButtonAction[KEYPAD_KEYSCOUNT])() = {setLatheMode, setMillMode, setMetric, setImperial, presetX, digit1, digit2, digit3, presetY, digit4, digit5, digit6,presetZ,zeroaxis,escapeButton,enterButton};
-  void (*keyButtonAction[KEYPAD_KEYSCOUNT])() = {presetX, digit1, digit2, digit3, presetY, digit4, digit5, digit6,presetZ,digit7, digit8, digit9,loadToolButton,decimalPointButton,digit0,enterButton};
+  void (*keyButtonAction[KEYPAD_KEYSCOUNT])() = {presetX, digit1, digit2, digit3, presetY, digit4, digit5, digit6,presetZ,digit7, digit8, digit9,loadToolButton,decimalPointButton,digit0,storeToolButton};
 #endif
 
 volatile int count=0;
@@ -45,6 +45,7 @@ _menu *r,*s0,*s1,*s2, *s3, *s4, *q4, *p1,*p2,*p3,*p4;
 int machine_mode = LATHE_METRIC;
 int lathe_mode = LATHEMODE_DEFAULT;
 bool loadtool_mode = false;
+bool storetool_mode = false;
 long tool_y[10];
 
 
@@ -360,8 +361,16 @@ void handleDigit(int digit) {
 
   if (loadtool_mode == true) {
     longCountY = tool_y[digit];
-    loadtool_mode = false;  
+    loadtool_mode = false;
+    return;  
   }
+
+  else if (storetool_mode == true) {
+    tool_y[digit] = longCountY;
+    storetool_mode = false;
+    return;
+  }
+
 
   float x=(*ptrPresetCount)/(CONVERT_UNITS[units] * 10.0);
   float increment = (float) pow(10, 2 - current_preset_pos);
@@ -465,18 +474,24 @@ void presetX() {
   ptrPresetCount = &longCountX;
   *ptrPresetCount = 0;
   current_preset_pos = 0;
+  storetool_mode = false;
+  loadtool_mode = false;
 }
 
 void presetY() {
   ptrPresetCount = &longCountY;
   *ptrPresetCount = 0;
   current_preset_pos = 0;
+  storetool_mode = false;
+  loadtool_mode = false;  
 }
 
 void presetZ() {
   ptrPresetCount = &longCountZ;
   *ptrPresetCount = 0;
   current_preset_pos = 0;
+  storetool_mode = false;
+  loadtool_mode = false;  
 }
 
 
@@ -508,4 +523,9 @@ void encoderZinterrupt() {
   else {
     longCountZ--;
   }
+}
+
+
+void storeToolButton() {
+  storetool_mode = true;
 }
