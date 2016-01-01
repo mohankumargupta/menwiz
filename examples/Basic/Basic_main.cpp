@@ -44,6 +44,9 @@ float preset_x=-0.5, preset_y=-0.5, preset_z=-0.5;
 _menu *r,*s0,*s1,*s2, *s3, *s4, *q4, *p1,*p2,*p3,*p4;
 int machine_mode = LATHE_METRIC;
 int lathe_mode = LATHEMODE_DEFAULT;
+bool loadtool_mode = false;
+long tool_y[10];
+
 
 void setup() {
   pinMode(ENCODER_BUTTON, INPUT_PULLUP);
@@ -354,11 +357,18 @@ void doNothing() {
 
 
 void handleDigit(int digit) {
+
+  if (loadtool_mode == true) {
+    longCountY = tool_y[digit];
+    loadtool_mode = false;  
+  }
+
   float x=(*ptrPresetCount)/(CONVERT_UNITS[units] * 10.0);
   float increment = (float) pow(10, 2 - current_preset_pos);
   x = x + increment;
   *ptrPresetCount = x* (CONVERT_UNITS[units] * 10);
   current_preset_pos = (current_preset_pos + 1) % 6;
+  
 }
 
 void digit1() {
@@ -406,26 +416,27 @@ void decimalPointButton() {
 }
 
 void loadToolButton() {
-  
+  loadtool_mode = true;
 }
 
 void store_tool1() {
-
+  tool_y[1] = longCountY;
 }
 
 void store_tool2() {
-  
+  tool_y[2] = longCountY;
 }
 
 void store_tool3() {
-  
+  tool_y[3] = longCountY;
 }
 
 void store_tool4() {
-  
+  tool_y[4] = longCountY;  
 }
 
 void load_tool1() {
+
 }  
 
 
@@ -453,16 +464,19 @@ void enterButton() {
 void presetX() {
   ptrPresetCount = &longCountX;
   *ptrPresetCount = 0;
+  current_preset_pos = 0;
 }
 
 void presetY() {
   ptrPresetCount = &longCountY;
   *ptrPresetCount = 0;
+  current_preset_pos = 0;
 }
 
 void presetZ() {
   ptrPresetCount = &longCountZ;
   *ptrPresetCount = 0;
+  current_preset_pos = 0;
 }
 
 
