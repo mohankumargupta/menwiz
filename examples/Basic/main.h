@@ -75,6 +75,7 @@ void digit8();
 void digit9();
 void loadToolButton();
 void decimalPointButton();
+void storeToolButton();
 
 void load_tool1();
 void load_tool2();

@@ -88,33 +88,17 @@ void setup() {
            s0->setBehaviour(MW_ACTION_CONFIRM, false);  
       s1 = tree.addMenu(MW_VAR, r, F("Change Mode"));
            s1->addVar(MW_LIST, &machine_mode);
+           s1->setBehaviour(MW_ACTION_CONFIRM, false); 
            s1->addItem(MW_LIST, F("LATHE_METRIC"));
            s1->addItem(MW_LIST, F("LATHE_IMPERIAL"));
            s1->addItem(MW_LIST, F("MILL_METRIC"));
            s1->addItem(MW_LIST, F("MILL_IMPERIAL"));          
       s2 = tree.addMenu(MW_VAR, r, F("Lathe Mode"));
            s2->addVar(MW_LIST, &lathe_mode);
+           s2->setBehaviour(MW_ACTION_CONFIRM, false); 
            s2->addItem(MW_LIST, F("LATHEMODE_DEFAULT"));
            s2->addItem(MW_LIST, F("LATHEMODE_RADIUS"));                         
-      s3 = tree.addMenu(MW_SUBMENU, r, F("STORE TOOL"));
-           p1 = tree.addMenu(MW_VAR, s3, F("TOOL1"));
-           p1->addVar(MW_ACTION, store_tool1);
-           p2 = tree.addMenu(MW_VAR, s3, F("TOOL2"));
-           p2->addVar(MW_ACTION, store_tool2);
-           p3 = tree.addMenu(MW_VAR, s3, F("TOOL3"));
-           p3->addVar(MW_ACTION, store_tool3);
-           p4 = tree.addMenu(MW_VAR, s3, F("TOOL4"));
-           p4->addVar(MW_ACTION, store_tool4);                                 
-      s4 = tree.addMenu(MW_SUBMENU, r, F("LOAD TOOL"));
-           p1 = tree.addMenu(MW_VAR, s4, F("TOOL1"));
-           p1->addVar(MW_ACTION, load_tool1);
-           p2 = tree.addMenu(MW_VAR, s4, F("TOOL2"));
-           p2->addVar(MW_ACTION, load_tool2);
-           p3 = tree.addMenu(MW_VAR, s4, F("TOOL3"));
-           p3->addVar(MW_ACTION, load_tool3);
-           p4 = tree.addMenu(MW_VAR, s4, F("TOOL4"));
-           p4->addVar(MW_ACTION, load_tool4); 
-
+      
   tree.addUsrScreen(myuserscreen,TIMEOUT_DELAY);
   tree.addUsrNav(navigation,6);
   tree.showUsrScreen();
