@@ -50,6 +50,8 @@
 #define LATHEMODE_DEFAULT 0
 #define LATHEMODE_RADIUS 1 
 
+#define STORE_MULTIPLE 1000
+#define STORE_MULTIPLE_FLOAT 1000.0 
 
 int navigation();
 void zeroaxis();

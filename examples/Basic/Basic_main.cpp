@@ -10,7 +10,7 @@
   Adafruit_Trellis _keypad = Adafruit_Trellis();
   Adafruit_TrellisSet keypad =  Adafruit_TrellisSet(&_keypad);
   //void (*keyButtonAction[KEYPAD_KEYSCOUNT])() = {setLatheMode, setMillMode, setMetric, setImperial, presetX, digit1, digit2, digit3, presetY, digit4, digit5, digit6,presetZ,zeroaxis,escapeButton,enterButton};
-  void (*keyButtonAction[KEYPAD_KEYSCOUNT])() = {presetX, digit1, digit2, digit3, presetY, digit4, digit5, digit6,presetZ,digit7, digit8, digit9,loadToolButton,decimalPointButton,digit0,storeToolButton};
+  void (*keyButtonAction[KEYPAD_KEYSCOUNT])() = {presetX, digit1, digit2, digit3, presetY, digit4, digit5, digit6,presetZ,digit7, digit8, digit9,loadToolButton,digit0,decimalPointButton,storeToolButton};
 #endif
 
 volatile int count=0;
@@ -146,9 +146,9 @@ void loop() {
 
 void myuserscreen() {
   float x=countX/CONVERT_UNITS[units],y=countY/CONVERT_UNITS[units],z=countZ/CONVERT_UNITS[units];
-  float longx = longCountX/(CONVERT_UNITS[units]*10);
-  float longy = longCountY/(CONVERT_UNITS[units]*10);
-  float longz = longCountZ/(CONVERT_UNITS[units]*10);
+  float longx = longCountX/(CONVERT_UNITS[units] * STORE_MULTIPLE);
+  float longy = longCountY/(CONVERT_UNITS[units] * STORE_MULTIPLE);
+  float longz = longCountZ/(CONVERT_UNITS[units] * STORE_MULTIPLE);
 
   switch(machine_mode) {
     case LATHE_METRIC:
@@ -298,6 +298,7 @@ void exitMenu() {
 
 void encoderButtonClicked() {
   encoderClicked = true; 
+  delay(40);
 }
 
 void encoderTurned() {
@@ -355,11 +356,30 @@ void handleDigit(int digit) {
     return;
   }
 
+  float x=(*ptrPresetCount)/(CONVERT_UNITS[units] * STORE_MULTIPLE_FLOAT);
+  Serial.print("old x:");
+  Serial.println(x);
+  
+  if (current_preset_pos < 3) {
+    x = 10 * x + digit;
+  }
 
-  float x=(*ptrPresetCount)/(CONVERT_UNITS[units] * 10.0);
-  float increment = (float) pow(10, 2 - current_preset_pos);
-  x = x + increment;
-  *ptrPresetCount = x* (CONVERT_UNITS[units] * 10);
+  else {
+    x = x + (float) pow(10, 2 - current_preset_pos) * digit;
+  }
+
+
+  Serial.print("new x:");
+  Serial.println(x);
+  //float increment = (float) pow(10, 2 - current_preset_pos) * digit;
+  //x = x + increment;
+  *ptrPresetCount = x * (CONVERT_UNITS[units] * STORE_MULTIPLE);
+  
+  //Serial.print("increment:");
+  //Serial.println(increment);
+  //*ptrPresetCount = round(x* (CONVERT_UNITS[units] * 10) + 1);
+  Serial.print("preset:");
+  Serial.println(*ptrPresetCount);
   current_preset_pos = (current_preset_pos + 1) % 6;
   
 }
@@ -481,31 +501,37 @@ void presetZ() {
 
 void encoderXinterrupt() {
   if (digitalRead(ENCODERX_PINA) == digitalRead(ENCODERX_PINB)) {
-    longCountX++;
+    //longCountX++;
+    longCountX = longCountX + (CONVERT_UNITS[units] * STORE_MULTIPLE);
   }
 
   else {
-    longCountX--;
+    //longCountX--;
+    longCountX = longCountX - (CONVERT_UNITS[units] * STORE_MULTIPLE);
   }
 }
 
 void encoderYinterrupt() {
   if (digitalRead(ENCODERY_PINA) == digitalRead(ENCODERY_PINB)) {
-    longCountY++;
+    //longCountY++;
+    longCountY = longCountY + (CONVERT_UNITS[units] * STORE_MULTIPLE);
   }
 
   else {
-    longCountY--;
+    //longCountY--;
+    longCountY = longCountY - (CONVERT_UNITS[units] * STORE_MULTIPLE);
   }
 }
 
 void encoderZinterrupt() {
   if (digitalRead(ENCODERZ_PINA) == digitalRead(ENCODERZ_PINB)) {
-    longCountZ++;
+    //longCountZ++;
+    longCountZ = longCountZ + (CONVERT_UNITS[units] * STORE_MULTIPLE);
   }
 
   else {
-    longCountZ--;
+    //longCountZ--;
+    longCountZ = longCountZ - (CONVERT_UNITS[units] * STORE_MULTIPLE);
   }
 }
 
