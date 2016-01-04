@@ -130,12 +130,12 @@ void loop() {
 
   newPosition = count;
   if (newPosition != oldPosition) {
-    if (newPosition/4 - oldPosition/4 == 1) {
+    if (newPosition/4 - oldPosition/4 == COUNT_PER_DETENTE) {
       //Serial.println("increment");
       encoderRotated = ENCODERROTATED_CLOCKWISE;
     }
 
-    if (oldPosition/4 - newPosition/4 == 1) {
+    if (oldPosition/4 - newPosition/4 == COUNT_PER_DETENTE) {
       //Serial.println("decrement");
       encoderRotated = ENCODERROTATED_ANTICLOCKWISE;
     }
