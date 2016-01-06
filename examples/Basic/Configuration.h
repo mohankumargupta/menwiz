@@ -43,4 +43,6 @@
 #define PRESET_MAX 1000.0
 #define PRESET_INCREMENT 0.1
 
+#define COUNT_PER_DETENTE 2
+
 #endif //CONFIGURATION_H

@@ -145,7 +145,7 @@ void loop() {
 }
 
 void myuserscreen() {
-  float x=countX/CONVERT_UNITS[units],y=countY/CONVERT_UNITS[units],z=countZ/CONVERT_UNITS[units];
+  //float x=countX/CONVERT_UNITS[units],y=countY/CONVERT_UNITS[units],z=countZ/CONVERT_UNITS[units];
   float longx = longCountX/(CONVERT_UNITS[units] * STORE_MULTIPLE);
   float longy = longCountY/(CONVERT_UNITS[units] * STORE_MULTIPLE);
   float longz = longCountZ/(CONVERT_UNITS[units] * STORE_MULTIPLE);
@@ -200,9 +200,6 @@ void myuserscreen() {
 }
 
 int navigation() {
-
-  
-
   if (encoderRotated == ENCODERROTATED_CLOCKWISE) {
     encoderRotated = ENCODERROTATED_NONE;
 
@@ -240,8 +237,6 @@ int navigation() {
     pressEnterKey = false;
     return MW_BTC;
   }
-
-
 
   if (Serial.available()) {
     byte read = Serial.read();

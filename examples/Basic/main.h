@@ -53,7 +53,6 @@
 #define STORE_MULTIPLE 1000
 #define STORE_MULTIPLE_FLOAT 1000.0 
 
-#define COUNT_PER_DETENTE 1
 
 int navigation();
 void zeroaxis();
