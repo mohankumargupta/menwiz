@@ -36,6 +36,7 @@ volatile int encoderRotated = ENCODERROTATED_NONE;
 menwiz tree;
 volatile int countX=0, countY=0, countZ=0;
 volatile long longCountX=0L, longCountY=0L, longCountZ=0L;
+volatile long longCountXEncoder=0L, longCountYEncoder=0L, longCountZEncoder=0L; 
 volatile long *ptrPresetCount = &longCountX;
 volatile float x,y,z;
 int current_preset = CONST_PRESET_X;
@@ -145,10 +146,22 @@ void loop() {
 }
 
 void myuserscreen() {
-  //float x=countX/CONVERT_UNITS[units],y=countY/CONVERT_UNITS[units],z=countZ/CONVERT_UNITS[units];
-  float longx = longCountX/(CONVERT_UNITS[units] * STORE_MULTIPLE);
-  float longy = longCountY/(CONVERT_UNITS[units] * STORE_MULTIPLE);
-  float longz = longCountZ/(CONVERT_UNITS[units] * STORE_MULTIPLE);
+  
+  float presetlongx = longCountX/(CONVERT_UNITS[units] * STORE_MULTIPLE);
+  float presetlongy = longCountY/(CONVERT_UNITS[units] * STORE_MULTIPLE);   
+  float presetlongz = longCountZ/(CONVERT_UNITS[units] * STORE_MULTIPLE);
+
+  //float longx = longCountX/(CONVERT_UNITS[units] * STORE_MULTIPLE);
+  //float longy = longCountY/(CONVERT_UNITS[units] * STORE_MULTIPLE);
+  //float longz = longCountZ/(CONVERT_UNITS[units] * STORE_MULTIPLE);
+
+  float encoderlongx = longCountXEncoder/CONVERT_UNITS[units]; 
+  float encoderlongy = longCountYEncoder/CONVERT_UNITS[units]; 
+  float encoderlongz = longCountZEncoder/CONVERT_UNITS[units]; 
+
+  longx = presetlongx + encoderlongx;
+  longy = presetlongy + encoderlongy;
+  longz = presetlongz + encoderlongz;
 
   switch(machine_mode) {
     case LATHE_METRIC:
@@ -472,6 +485,7 @@ void enterButton() {
 void presetX() {
   ptrPresetCount = &longCountX;
   *ptrPresetCount = 0;
+  longCountXEncoder = 0;
   current_preset_pos = 0;
   storetool_mode = false;
   loadtool_mode = false;
@@ -480,6 +494,7 @@ void presetX() {
 void presetY() {
   ptrPresetCount = &longCountY;
   *ptrPresetCount = 0;
+  longCountYEncoder = 0;
   current_preset_pos = 0;
   storetool_mode = false;
   loadtool_mode = false;  
@@ -488,6 +503,7 @@ void presetY() {
 void presetZ() {
   ptrPresetCount = &longCountZ;
   *ptrPresetCount = 0;
+  longCountZEncoder = 0;
   current_preset_pos = 0;
   storetool_mode = false;
   loadtool_mode = false;  
@@ -496,37 +512,31 @@ void presetZ() {
 
 void encoderXinterrupt() {
   if (digitalRead(ENCODERX_PINA) == digitalRead(ENCODERX_PINB)) {
-    //longCountX++;
-    longCountX = longCountX + (CONVERT_UNITS[units] * STORE_MULTIPLE);
+    longCountXEncoder++;
   }
 
   else {
-    //longCountX--;
-    longCountX = longCountX - (CONVERT_UNITS[units] * STORE_MULTIPLE);
+    longCountXEncoder--;
   }
 }
 
 void encoderYinterrupt() {
   if (digitalRead(ENCODERY_PINA) == digitalRead(ENCODERY_PINB)) {
-    //longCountY++;
-    longCountY = longCountY + (CONVERT_UNITS[units] * STORE_MULTIPLE);
+    longCountYEncoder++;
   }
 
   else {
-    //longCountY--;
-    longCountY = longCountY - (CONVERT_UNITS[units] * STORE_MULTIPLE);
+    longCountYEncoder--;
   }
 }
 
 void encoderZinterrupt() {
   if (digitalRead(ENCODERZ_PINA) == digitalRead(ENCODERZ_PINB)) {
-    //longCountZ++;
-    longCountZ = longCountZ + (CONVERT_UNITS[units] * STORE_MULTIPLE);
+    longCountZEncoder++;
   }
 
   else {
-    //longCountZ--;
-    longCountZ = longCountZ - (CONVERT_UNITS[units] * STORE_MULTIPLE);
+    longCountZEncoder--;
   }
 }
 
