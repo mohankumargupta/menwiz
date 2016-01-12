@@ -159,9 +159,9 @@ void myuserscreen() {
   float encoderlongy = longCountYEncoder/CONVERT_UNITS[units]; 
   float encoderlongz = longCountZEncoder/CONVERT_UNITS[units]; 
 
-  longx = presetlongx + encoderlongx;
-  longy = presetlongy + encoderlongy;
-  longz = presetlongz + encoderlongz;
+  float longx = presetlongx + encoderlongx;
+  float longy = presetlongy + encoderlongy;
+  float longz = presetlongz + encoderlongz;
 
   switch(machine_mode) {
     case LATHE_METRIC:
