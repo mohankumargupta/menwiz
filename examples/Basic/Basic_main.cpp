@@ -102,9 +102,6 @@ void setup() {
            s2->setBehaviour(MW_ACTION_CONFIRM, false); 
            s2->addItem(MW_LIST, F("DIAMETER"));
            s2->addItem(MW_LIST, F("RADIUS"));  
-      s3 = tree.addMenu(MW_VAR, r, F("Zero Axis"));
-           s3->addVar(MW_ACTION, zeroaxis);
-           s3->setBehaviour(MW_ACTION_CONFIRM, false);
       s4 = tree.addMenu(MW_VAR, r, F("Reset"));    
            s4->addVar(MW_ACTION, reset);
            s4->setBehaviour(MW_ACTION_CONFIRM, false);
