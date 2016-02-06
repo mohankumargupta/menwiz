@@ -322,18 +322,15 @@ void zeroaxis() {
 void reset() {
   zeroaxis();
   machine_mode = MILL_METRIC;
+  convertx = CONVERTX_METRIC;
+  converty = CONVERTY_METRIC;
+  convertz = CONVERTZ_METRIC;
 }
 
 void countpulses() {
   convertx = 1.0;
   converty = 1.0;
   convertz = 1.0;
-
-  if (machine_mode == LATHE_IMPERIAL || machine_mode == MILL_IMPERIAL) {
-    convertx = 25.4;
-    converty = 25.4;
-    convertz = 25.4;
-  }
 }
 
 void exitMenu() {
