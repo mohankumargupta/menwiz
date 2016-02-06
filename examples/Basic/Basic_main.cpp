@@ -18,7 +18,6 @@ volatile int state;
 long oldPosition = -999;
 long newPosition = 0;
 
-const float CONVERT_UNITS[] = {CONVERT_METRIC, CONVERT_IMPERIAL, CONVERT_SOMETHING, CONVERT_SOMETHING2, CONVERT_SOMETHING3};
 const char *MSG_UNITS[] = {"METRIC","IMPERIAL","SOMETHING1","SOMETHING2","SOMETHING3"};
 int units = 0;
 
@@ -174,9 +173,6 @@ void myuserscreen() {
   float presetlongy = longCountY/(converty * STORE_MULTIPLE);   
   float presetlongz = longCountZ/(convertz * STORE_MULTIPLE);
 
-  //float longx = longCountX/(CONVERT_UNITS[units] * STORE_MULTIPLE);
-  //float longy = longCountY/(CONVERT_UNITS[units] * STORE_MULTIPLE);
-  //float longz = longCountZ/(CONVERT_UNITS[units] * STORE_MULTIPLE);
 
   float encoderlongx = longCountXEncoder/convertx; 
   float encoderlongy = longCountYEncoder/converty; 
@@ -274,6 +270,7 @@ int navigation() {
     return MW_BTC;
   }
 
+  /*
   if (Serial.available()) {
     byte read = Serial.read();
     switch (read) {
@@ -307,6 +304,7 @@ int navigation() {
     preset_z = -0.5;
     return MW_BTE;
   }
+  */
 
   else
      return MW_BTNULL;  
