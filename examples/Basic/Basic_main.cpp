@@ -106,8 +106,8 @@ void setup() {
            s3->addVar(MW_ACTION, zeroaxis);
            s3->setBehaviour(MW_ACTION_CONFIRM, false);
       s4 = tree.addMenu(MW_VAR, r, F("Reset"));    
-           s3->addVar(MW_ACTION, reset);
-           s3->setBehaviour(MW_ACTION_CONFIRM, false);
+           s4->addVar(MW_ACTION, reset);
+           s4->setBehaviour(MW_ACTION_CONFIRM, false);
       s5 = tree.addMenu(MW_VAR, r, F("Count Pulses"));
            s5->addVar(MW_ACTION, countpulses);
            s5->setBehaviour(MW_ACTION_CONFIRM, false);
@@ -323,12 +323,14 @@ void reset() {
   convertx = CONVERTX_METRIC;
   converty = CONVERTY_METRIC;
   convertz = CONVERTZ_METRIC;
+  displayUsrScreenImmediately=true;  
 }
 
 void countpulses() {
   convertx = 1.0;
   converty = 1.0;
   convertz = 1.0;
+  displayUsrScreenImmediately=true;
 }
 
 void exitMenu() {
