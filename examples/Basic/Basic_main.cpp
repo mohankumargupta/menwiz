@@ -171,9 +171,9 @@ void myuserscreen() {
   float presetlongz = longCountZ/(convertz * STORE_MULTIPLE);
 
 
-  float encoderlongx = longCountXEncoder/convertx; 
-  float encoderlongy = longCountYEncoder/converty; 
-  float encoderlongz = longCountZEncoder/convertz; 
+  float encoderlongx = (float) longCountXEncoder/convertx; 
+  float encoderlongy = (float) longCountYEncoder/converty; 
+  float encoderlongz = (float) longCountZEncoder/convertz; 
 
   float longx = presetlongx + encoderlongx;
   float longy = presetlongy + encoderlongy;

@@ -4,7 +4,7 @@
 //Convert Units
 #define CONVERTX_METRIC 11.88 
 #define CONVERTY_METRIC 11.88
-#define CONVERTZ_METRIC 11.88
+#define CONVERTZ_METRIC 720.0
 
 // Encoder Ports - XYZ Axis linear encoders 
 #define ENCODERX_PINA 2
