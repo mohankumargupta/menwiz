@@ -2,11 +2,9 @@
 #define CONFIGURATION_H
 
 //Convert Units
-#define CONVERT_METRIC 11.88
-#define CONVERT_IMPERIAL 301.752
-#define CONVERT_SOMETHING 1.0
-#define CONVERT_SOMETHING2 1.0
-#define CONVERT_SOMETHING3 1.0
+#define CONVERTX_METRIC 11.88 
+#define CONVERTY_METRIC 11.88
+#define CONVERTZ_METRIC 11.88
 
 // Encoder Ports - XYZ Axis linear encoders 
 #define ENCODERX_PINA 2

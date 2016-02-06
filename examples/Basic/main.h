@@ -56,6 +56,8 @@
 
 int navigation();
 void zeroaxis();
+void countpulses();
+void reset();
 void exitMenu();
 void myuserscreen();
 void encoderButtonClicked();

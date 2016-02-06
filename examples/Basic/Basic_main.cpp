@@ -41,6 +41,7 @@ volatile long *ptrPresetCount = &longCountX;
 volatile float x,y,z;
 int current_preset = CONST_PRESET_X;
 int current_preset_pos = 0;
+int presets = [CONVERTX_METRIC, CONVERTY_METRIC, CONVERTZ_METRIC];
 float preset_x=-0.5, preset_y=-0.5, preset_z=-0.5; 
 _menu *r,*s0,*s1,*s2, *s3, *s4, *q4, *p1,*p2,*p3,*p4;
 int machine_mode = LATHE_METRIC;
@@ -49,6 +50,9 @@ bool loadtool_mode = false;
 bool storetool_mode = false;
 long tool_y[10];
 
+  int convertx = CONVERTX_METRIC;
+  int converty = CONVERTY_METRIC;
+  int convertz = CONVERTZ_METRIC;
 
 void setup() {
   pinMode(ENCODER_BUTTON, INPUT_PULLUP);
@@ -98,7 +102,18 @@ void setup() {
            s2->addVar(MW_LIST, &lathe_mode);
            s2->setBehaviour(MW_ACTION_CONFIRM, false); 
            s2->addItem(MW_LIST, F("DIAMETER"));
-           s2->addItem(MW_LIST, F("RADIUS"));                         
+           s2->addItem(MW_LIST, F("RADIUS"));  
+      s3 = tree.addMenu(MW_VAR, r, F("Zero Axis"));
+           s3->addVar(MW_ACTION, zeroaxis);
+           s3->setBehaviour(MW_ACTION_CONFIRM, false);
+      s4 = tree.addMenu(MW_VAR, r, F("Reset"));    
+           s3->addVar(MW_ACTION, reset);
+           s3->setBehaviour(MW_ACTION_CONFIRM, false);
+      s5 = tree.addMenu(MW_VAR, r, F("Count Pulses"));
+           s5->addVar(MW_ACTION, countpulses);
+           s5->setBehaviour(MW_ACTION_CONFIRM, false);
+
+
       
   tree.addUsrScreen(myuserscreen,TIMEOUT_DELAY);
   tree.addUsrNav(navigation,6);
@@ -146,18 +161,26 @@ void loop() {
 }
 
 void myuserscreen() {
-  
-  float presetlongx = longCountX/(CONVERT_UNITS[units] * STORE_MULTIPLE);
-  float presetlongy = longCountY/(CONVERT_UNITS[units] * STORE_MULTIPLE);   
-  float presetlongz = longCountZ/(CONVERT_UNITS[units] * STORE_MULTIPLE);
+
+
+  if (machine_mode == LATHE_IMPERIAL || machine_mode == MILL_IMPERIAL) {
+    convertx = convertx * 25.4;
+    converty = converty * 25.4;
+    convertz = convertz * 25.4;   
+  } 
+
+
+  float presetlongx = longCountX/(convertx * STORE_MULTIPLE);
+  float presetlongy = longCountY/(converty * STORE_MULTIPLE);   
+  float presetlongz = longCountZ/(convertz * STORE_MULTIPLE);
 
   //float longx = longCountX/(CONVERT_UNITS[units] * STORE_MULTIPLE);
   //float longy = longCountY/(CONVERT_UNITS[units] * STORE_MULTIPLE);
   //float longz = longCountZ/(CONVERT_UNITS[units] * STORE_MULTIPLE);
 
-  float encoderlongx = longCountXEncoder/CONVERT_UNITS[units]; 
-  float encoderlongy = longCountYEncoder/CONVERT_UNITS[units]; 
-  float encoderlongz = longCountZEncoder/CONVERT_UNITS[units]; 
+  float encoderlongx = longCountXEncoder/convertx; 
+  float encoderlongy = longCountYEncoder/converty; 
+  float encoderlongz = longCountZEncoder/convertz; 
 
   float longx = presetlongx + encoderlongx;
   float longy = presetlongy + encoderlongy;
@@ -290,14 +313,27 @@ int navigation() {
 }
 
 void zeroaxis() {
-  countX = 0;
-  countY = 0;
-  countZ = 0;
-  longCountX = 0;
-  longCountY = 0;
-  longCountZ = 0;
+  presetX();
+  presetY();
+  presetZ();
   displayUsrScreenImmediately=true;
-  pressEnterKey = true;
+}
+
+void reset() {
+  zeroaxis();
+  machine_mode = MILL_METRIC;
+}
+
+void countpulses() {
+  convertx = 1.0;
+  converty = 1.0;
+  convertz = 1.0;
+
+  if (machine_mode == LATHE_IMPERIAL || machine_mode == MILL_IMPERIAL) {
+    convertx = 25.4;
+    converty = 25.4;
+    convertz = 25.4;
+  }
 }
 
 void exitMenu() {
@@ -364,7 +400,12 @@ void handleDigit(int digit) {
     return;
   }
 
-  float x=(*ptrPresetCount)/(CONVERT_UNITS[units] * STORE_MULTIPLE_FLOAT);
+  int correct_conversion = presets[current_preset];
+  if (machine_mode == LATHE_IMPERIAL || machine_mode == MILL_IMPERIAL) {
+    correct_conversion = correct_conversion * 25.4;
+  }
+
+  float x=(*ptrPresetCount)/(correct_conversion * STORE_MULTIPLE_FLOAT);
   Serial.print("old x:");
   Serial.println(x);
   
@@ -381,7 +422,7 @@ void handleDigit(int digit) {
   Serial.println(x);
   //float increment = (float) pow(10, 2 - current_preset_pos) * digit;
   //x = x + increment;
-  *ptrPresetCount = x * (CONVERT_UNITS[units] * STORE_MULTIPLE);
+  *ptrPresetCount = x * (correct_conversion * STORE_MULTIPLE);
   
   //Serial.print("increment:");
   //Serial.println(increment);
