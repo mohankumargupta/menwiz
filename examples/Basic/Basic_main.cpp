@@ -40,7 +40,7 @@ volatile long *ptrPresetCount = &longCountX;
 volatile float x,y,z;
 int current_preset = CONST_PRESET_X;
 int current_preset_pos = 0;
-int presets = [CONVERTX_METRIC, CONVERTY_METRIC, CONVERTZ_METRIC];
+int presets = {CONVERTX_METRIC, CONVERTY_METRIC, CONVERTZ_METRIC};
 float preset_x=-0.5, preset_y=-0.5, preset_z=-0.5; 
 _menu *r,*s0,*s1,*s2, *s3, *s4, *q4, *p1,*p2,*p3,*p4;
 int machine_mode = LATHE_METRIC;
