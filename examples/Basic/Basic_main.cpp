@@ -49,9 +49,15 @@ bool loadtool_mode = false;
 bool storetool_mode = false;
 long tool_y[10];
 
-  int convertx = CONVERTX_METRIC;
-  int converty = CONVERTY_METRIC;
-  int convertz = CONVERTZ_METRIC;
+int convertx = CONVERTX_METRIC;
+int converty = CONVERTY_METRIC;
+int convertz = CONVERTZ_METRIC;
+
+int CONVERTX_IMPERIAL = CONVERTX_METRIC * 25.4;
+int CONVERTY_IMPERIAL = CONVERTY_METRIC * 25.4;
+int CONVERTZ_IMPERIAL = CONVERTZ_METRIC * 25.4;
+
+float convertx_preset, converty_preset, convertz_preset;
 
 void setup() {
   pinMode(ENCODER_BUTTON, INPUT_PULLUP);
@@ -158,18 +164,30 @@ void loop() {
 
 void myuserscreen() {
 
-
   if (machine_mode == LATHE_IMPERIAL || machine_mode == MILL_IMPERIAL) {
-    convertx = convertx * 25.4;
-    converty = converty * 25.4;
-    convertz = convertz * 25.4;   
-  } 
+    convertx = CONVERTX_IMPERIAL;
+    converty = CONVERTY_IMPERIAL;
+    convertz = CONVERTZ_IMPERIAL;   
+
+    convertx_preset = 1.0;
+    converty_preset = 1.0;
+    convertz_preset = 1.0;
+  }  
+
+  else {
+    convertx = CONVERTX_METRIC;
+    converty = CONVERTY_METRIC;
+    convertz = CONVERTZ_METRIC;
+
+    convertx_preset = 25.4;
+    converty_preset = 25.4;
+    convertz_preset = 25.4;
+  }
 
 
-  float presetlongx = longCountX/(convertx * STORE_MULTIPLE);
-  float presetlongy = longCountY/(converty * STORE_MULTIPLE);   
-  float presetlongz = longCountZ/(convertz * STORE_MULTIPLE);
-
+  float presetlongx = (float) longCountX/(convertx_preset * STORE_MULTIPLE_FLOAT);
+  float presetlongy = (float) longCountY/(converty_preset * STORE_MULTIPLE_FLOAT);   
+  float presetlongz = (float) longCountZ/(convertz_preset * STORE_MULTIPLE_FLOAT);
 
   float encoderlongx = (float) longCountXEncoder/convertx; 
   float encoderlongy = (float) longCountYEncoder/converty; 
@@ -381,6 +399,7 @@ void doNothing() {
 
 
 void handleDigit(int digit) {
+int correct_conversion;
 
   if (loadtool_mode == true) {
     longCountY = tool_y[digit];
@@ -394,9 +413,12 @@ void handleDigit(int digit) {
     return;
   }
 
-  int correct_conversion = presets[current_preset];
-  if (machine_mode == LATHE_IMPERIAL || machine_mode == MILL_IMPERIAL) {
-    correct_conversion = correct_conversion * 25.4;
+  if (machine_mode == LATHE_METRIC || machine_mode == MILL_METRIC) {
+    correct_conversion = 25.4;
+  }
+
+  else {
+    correct_conversion = 1.0;
   }
 
   float x=(*ptrPresetCount)/(correct_conversion * STORE_MULTIPLE_FLOAT);
