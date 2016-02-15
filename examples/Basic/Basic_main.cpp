@@ -47,6 +47,7 @@ int machine_mode = LATHE_METRIC;
 int lathe_mode = LATHEMODE_DIAMETER;
 bool loadtool_mode = false;
 bool storetool_mode = false;
+long tool_x[10];
 long tool_y[10];
 
 int convertx = CONVERTX_METRIC;
@@ -402,13 +403,15 @@ void handleDigit(int digit) {
 double correct_conversion;
 
   if (loadtool_mode == true) {
-    longCountY = tool_y[digit];
+    longCountXEncoder = tool_x[digit];
+    longCountYEncoder = tool_y[digit];
     loadtool_mode = false;
     return;  
   }
 
   else if (storetool_mode == true) {
-    tool_y[digit] = longCountY;
+    tool_x[digit] = longCountXEncoder;
+    tool_y[digit] = longCountYEncoder;
     storetool_mode = false;
     return;
   }
