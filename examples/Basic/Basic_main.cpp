@@ -414,7 +414,7 @@ double correct_conversion;
   }
 
   if (machine_mode == LATHE_METRIC || machine_mode == MILL_METRIC) {
-    correct_conversion = 25400;
+    correct_conversion = 25400.0;
   }
 
   else {
