@@ -399,7 +399,7 @@ void doNothing() {
 
 
 void handleDigit(int digit) {
-int correct_conversion;
+double correct_conversion;
 
   if (loadtool_mode == true) {
     longCountY = tool_y[digit];
@@ -414,17 +414,16 @@ int correct_conversion;
   }
 
   if (machine_mode == LATHE_METRIC || machine_mode == MILL_METRIC) {
-    correct_conversion = 25.4;
+    correct_conversion = 25400;
   }
 
   else {
     correct_conversion = 1.0;
   }
 
-  float x=(*ptrPresetCount)/(correct_conversion * STORE_MULTIPLE_FLOAT);
-  Serial.print("old x:");
-  Serial.println(x);
-  
+
+  float x=(float)(*ptrPresetCount)/correct_conversion;
+
   if (current_preset_pos < 3) {
     x = 10 * x + digit;
   }
@@ -433,20 +432,8 @@ int correct_conversion;
     x = x + (float) pow(10, 2 - current_preset_pos) * digit;
   }
 
-
-  Serial.print("new x:");
-  Serial.println(x);
-  //float increment = (float) pow(10, 2 - current_preset_pos) * digit;
-  //x = x + increment;
-  *ptrPresetCount = x * (correct_conversion * STORE_MULTIPLE);
-  
-  //Serial.print("increment:");
-  //Serial.println(increment);
-  //*ptrPresetCount = round(x* (CONVERT_UNITS[units] * 10) + 1);
-  Serial.print("preset:");
-  Serial.println(*ptrPresetCount);
+  *ptrPresetCount = x * correct_conversion; 
   current_preset_pos = (current_preset_pos + 1) % 6;
-  
 }
 
 void digit1() {
