@@ -165,10 +165,10 @@ void loop() {
 
 void myuserscreen() {
 
-  if (machine_mode == LATHE_IMPERIAL || machine_mode == MILL_IMPERIAL) {
-    convertx = CONVERTX_IMPERIAL;
-    converty = CONVERTY_IMPERIAL;
-    convertz = CONVERTZ_IMPERIAL;   
+  if (machine_mode == LATHE_METRIC || machine_mode == MILL_METRIC) {
+    convertx = CONVERTX_METRIC;
+    converty = CONVERTY_METRIC;
+    convertz = CONVERTZ_METRIC;   
 
     convertx_preset = 1.0;
     converty_preset = 1.0;
@@ -176,9 +176,9 @@ void myuserscreen() {
   }  
 
   else {
-    convertx = CONVERTX_METRIC;
-    converty = CONVERTY_METRIC;
-    convertz = CONVERTZ_METRIC;
+    convertx = CONVERTX_IMPERIAL;
+    converty = CONVERTY_IMPERIAL;
+    convertz = CONVERTZ_IMPERIAL;
 
     convertx_preset = 25.4;
     converty_preset = 25.4;
@@ -416,7 +416,7 @@ double correct_conversion;
     return;
   }
 
-  if (machine_mode == LATHE_METRIC || machine_mode == MILL_METRIC) {
+  if (machine_mode == LATHE_IMPERIAL || machine_mode == MILL_IMPERIAL) {
     correct_conversion = 25400.0;
   }
 
