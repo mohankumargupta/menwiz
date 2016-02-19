@@ -9,7 +9,6 @@
 #ifdef TRELLIS_KEYPAD
   Adafruit_Trellis _keypad = Adafruit_Trellis();
   Adafruit_TrellisSet keypad =  Adafruit_TrellisSet(&_keypad);
-  //void (*keyButtonAction[KEYPAD_KEYSCOUNT])() = {setLatheMode, setMillMode, setMetric, setImperial, presetX, digit1, digit2, digit3, presetY, digit4, digit5, digit6,presetZ,zeroaxis,escapeButton,enterButton};
   void (*keyButtonAction[KEYPAD_KEYSCOUNT])() = {presetX, digit1, digit2, digit3, presetY, digit4, digit5, digit6,presetZ,digit7, digit8, digit9,loadToolButton,digit0,decimalPointButton,storeToolButton};
 #endif
 
@@ -54,9 +53,9 @@ int convertx = CONVERTX_METRIC;
 int converty = CONVERTY_METRIC;
 int convertz = CONVERTZ_METRIC;
 
-int CONVERTX_IMPERIAL = CONVERTX_METRIC * 25.4;
-int CONVERTY_IMPERIAL = CONVERTY_METRIC * 25.4;
-int CONVERTZ_IMPERIAL = CONVERTZ_METRIC * 25.4;
+float CONVERTX_IMPERIAL = CONVERTX_METRIC / 25.4;
+float CONVERTY_IMPERIAL = CONVERTY_METRIC / 25.4;
+float CONVERTZ_IMPERIAL = CONVERTZ_METRIC / 25.4;
 
 float convertx_preset, converty_preset, convertz_preset;
 
@@ -84,7 +83,14 @@ void setup() {
     keypad.begin(KEYPAD_I2CADDRESS);
   #endif
 
-  Serial.begin(115200); 
+  Serial.begin(115200);
+
+  Serial.println("COMMANDS AVAILABLE");
+  Serial.println("s: store button");
+  Serial.println("l: load button");
+  Serial.println(" ");
+
+
   #ifdef LCD_SIXTEENBYTWO   
     tree.begin(&lcd,16,2); 
   #else
@@ -133,6 +139,14 @@ void setup() {
 
 void loop() {
   tree.draw();
+
+  if (Serial.available()) {
+    byte read = Serial.read();
+    switch (read) {
+     case 's': storeToolButton();break;
+     case 'l': loadToolButton(); break;
+    }
+  }
 
   #ifdef TRELLIS_KEYPAD
     if (keypad.readSwitches()) {
@@ -406,6 +420,7 @@ double correct_conversion;
     longCountXEncoder = tool_x[digit];
     longCountYEncoder = tool_y[digit];
     loadtool_mode = false;
+    showToolsOffsets();
     return;  
   }
 
@@ -413,6 +428,7 @@ double correct_conversion;
     tool_x[digit] = longCountXEncoder;
     tool_y[digit] = longCountYEncoder;
     storetool_mode = false;
+    showToolsOffsets();
     return;
   }
 
@@ -485,6 +501,8 @@ void decimalPointButton() {
 
 void loadToolButton() {
   loadtool_mode = true;
+  Serial.println("Load mode selected");
+  Serial.println(" ");
 }
 
 void store_tool1() {
@@ -590,4 +608,20 @@ void encoderZinterrupt() {
 
 void storeToolButton() {
   storetool_mode = true;
+  Serial.println("Store mode selected");
+  Serial.println(" ");
+}
+
+void showToolsOffsets() {
+
+  for (i=1; i<=4; i++) {
+    Serial.print("[Tool ");
+    Serial.print(i);  
+    Serial.print("] - ");
+    Serial.print("X:");
+    Serial.print(tool_x[i]);
+    Serial.print(" Y:");
+    Serial.println(tool_y[i]);
+    Serial.println("-----------------------")
+  }
 }
