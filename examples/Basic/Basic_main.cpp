@@ -145,6 +145,15 @@ void loop() {
     switch (read) {
      case 's': storeToolButton();break;
      case 'l': loadToolButton(); break;
+     case '1': handleDigit(1); break;
+     case '2': handleDigit(2); break;
+     case '3': handleDigit(3); break;
+     case '4': handleDigit(4); break;
+     case '5': handleDigit(5); break;
+     case '6': handleDigit(6); break;
+     case '7': handleDigit(7); break;
+     case '8': handleDigit(8) break;
+     case '9' : handleDigit(9) break;
     }
   }
 
