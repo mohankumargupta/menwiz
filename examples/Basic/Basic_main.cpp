@@ -88,7 +88,9 @@ void setup() {
   Serial.println("COMMANDS AVAILABLE");
   Serial.println("s: store button");
   Serial.println("l: load button");
-  Serial.println(" ");
+  Serial.println("x: clear x");
+  Serial.println("y: clear y");
+  Serial.println("z: clear z");
 
 
   #ifdef LCD_SIXTEENBYTWO   
@@ -154,6 +156,10 @@ void loop() {
      case '7': handleDigit(7); break;
      case '8': handleDigit(8); break;
      case '9' : handleDigit(9); break;
+
+     case 'x': presetX(); break;
+     case 'y': presetY(); break;
+     case 'z': presetZ(); break;
     }
   }
 
