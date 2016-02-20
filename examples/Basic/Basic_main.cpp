@@ -85,12 +85,7 @@ void setup() {
 
   Serial.begin(115200);
 
-  Serial.println("COMMANDS AVAILABLE");
-  Serial.println("s: store button");
-  Serial.println("l: load button");
-  Serial.println("x: clear x");
-  Serial.println("y: clear y");
-  Serial.println("z: clear z");
+  clearAndHome();
 
 
   #ifdef LCD_SIXTEENBYTWO   
@@ -145,6 +140,7 @@ void loop() {
   if (Serial.available()) {
     byte read = Serial.read();
     switch (read) {
+     case 'c': clearAndHome(); break;
      case 's': storeToolButton();break;
      case 'l': loadToolButton(); break;
      case '1': handleDigit(1); break;
@@ -640,3 +636,17 @@ void showToolsOffsets() {
     Serial.println("-----------------------");
   }
 }
+
+void clearAndHome() 
+{ 
+  Serial.write(27); 
+  Serial.print("[2J"); // clear screen 
+  Serial.write(27); // ESC 
+  Serial.print("[H"); // cursor to home 
+  Serial.println("COMMANDS AVAILABLE");
+  Serial.println("s: store button");
+  Serial.println("l: load button");
+  Serial.println("x: clear x");
+  Serial.println("y: clear y");
+  Serial.println("z: clear z");    
+} 
