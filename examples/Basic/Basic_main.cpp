@@ -360,10 +360,10 @@ void zeroaxis() {
 
 void reset() {
   zeroaxis();
-  machine_mode = MILL_METRIC;
-  convertx = CONVERTX_METRIC;
-  converty = CONVERTY_METRIC;
-  convertz = CONVERTZ_METRIC;
+  machine_mode = LATHE_METRIC;
+  //convertx = CONVERTX_METRIC;
+  //converty = CONVERTY_METRIC;
+  //convertz = CONVERTZ_METRIC;
   displayUsrScreenImmediately=true;  
 }
 
@@ -639,10 +639,10 @@ void showToolsOffsets() {
 
 void clearAndHome() 
 { 
-  Serial.write(27); 
-  Serial.print("[2J"); // clear screen 
-  Serial.write(27); // ESC 
-  Serial.print("[H"); // cursor to home 
+  //Serial.write(27); 
+  //Serial.print("[2J"); // clear screen 
+  //Serial.write(27); // ESC 
+  //Serial.print("[H"); // cursor to home 
   Serial.println("COMMANDS AVAILABLE");
   Serial.println("s: store button");
   Serial.println("l: load button");
