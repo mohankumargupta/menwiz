@@ -112,7 +112,7 @@ void setup() {
            s2->setBehaviour(MW_ACTION_CONFIRM, false); 
            s2->addItem(MW_LIST, F("DIAMETER"));
            s2->addItem(MW_LIST, F("RADIUS"));  
-      s4 = tree.addMenu(MW_VAR, r, F("Reset"));    
+      s4 = tree.addMenu(MW_VAR, r, F("Factory Reset"));    
            s4->addVar(MW_ACTION, reset);
            s4->setBehaviour(MW_ACTION_CONFIRM, false);
       s5 = tree.addMenu(MW_VAR, r, F("Count Pulses"));
@@ -191,9 +191,9 @@ void loop() {
 void myuserscreen() {
 
   if (machine_mode == LATHE_METRIC || machine_mode == MILL_METRIC) {
-    convertx = CONVERTX_METRIC;
-    converty = CONVERTY_METRIC;
-    convertz = CONVERTZ_METRIC;   
+    //convertx = CONVERTX_METRIC;
+    //converty = CONVERTY_METRIC;
+    //convertz = CONVERTZ_METRIC;   
 
     convertx_preset = 1.0;
     converty_preset = 1.0;
@@ -201,9 +201,9 @@ void myuserscreen() {
   }  
 
   else {
-    convertx = CONVERTX_IMPERIAL;
-    converty = CONVERTY_IMPERIAL;
-    convertz = CONVERTZ_IMPERIAL;
+    //convertx = CONVERTX_IMPERIAL;
+    //converty = CONVERTY_IMPERIAL;
+    //convertz = CONVERTZ_IMPERIAL;
 
     convertx_preset = 25.4;
     converty_preset = 25.4;
@@ -361,9 +361,9 @@ void zeroaxis() {
 void reset() {
   zeroaxis();
   machine_mode = LATHE_METRIC;
-  //convertx = CONVERTX_METRIC;
-  //converty = CONVERTY_METRIC;
-  //convertz = CONVERTZ_METRIC;
+  convertx = CONVERTX_METRIC;
+  converty = CONVERTY_METRIC;
+  convertz = CONVERTZ_METRIC;
   displayUsrScreenImmediately=true;  
 }
 
