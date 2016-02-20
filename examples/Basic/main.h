@@ -106,6 +106,6 @@ void encoderYinterrupt();
 void encoderZinterrupt();
 
 void showToolsOffsets();
-void clearAndHome()
+void clearAndHome();
 #endif //BASIC_H
 
