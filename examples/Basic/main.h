@@ -92,6 +92,7 @@ void store_tool2();
 void store_tool3();
 void store_tool4();
 
+void handleDigit(int);
 
 void enterButton();
 void escapeButton();

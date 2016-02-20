@@ -152,8 +152,8 @@ void loop() {
      case '5': handleDigit(5); break;
      case '6': handleDigit(6); break;
      case '7': handleDigit(7); break;
-     case '8': handleDigit(8) break;
-     case '9' : handleDigit(9) break;
+     case '8': handleDigit(8); break;
+     case '9' : handleDigit(9); break;
     }
   }
 
@@ -623,7 +623,7 @@ void storeToolButton() {
 
 void showToolsOffsets() {
 
-  for (i=1; i<=4; i++) {
+  for (int i=1; i<=4; i++) {
     Serial.print("[Tool ");
     Serial.print(i);  
     Serial.print("] - ");
@@ -631,6 +631,6 @@ void showToolsOffsets() {
     Serial.print(tool_x[i]);
     Serial.print(" Y:");
     Serial.println(tool_y[i]);
-    Serial.println("-----------------------")
+    Serial.println("-----------------------");
   }
 }
