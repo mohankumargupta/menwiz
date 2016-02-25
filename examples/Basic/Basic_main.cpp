@@ -58,6 +58,7 @@ float CONVERTY_IMPERIAL = CONVERTY_METRIC / 25.4;
 float CONVERTZ_IMPERIAL = CONVERTZ_METRIC / 25.4;
 
 float convertx_preset, converty_preset, convertz_preset;
+bool countingpulsesmode = false;
 
 void setup() {
   pinMode(ENCODER_BUTTON, INPUT_PULLUP);
@@ -191,9 +192,11 @@ void loop() {
 void myuserscreen() {
 
   if (machine_mode == LATHE_METRIC || machine_mode == MILL_METRIC) {
-    //convertx = CONVERTX_METRIC;
-    //converty = CONVERTY_METRIC;
-    //convertz = CONVERTZ_METRIC;   
+    if (countingpulsesmode == false) {
+      convertx = CONVERTX_METRIC;
+      converty = CONVERTY_METRIC;
+      convertz = CONVERTZ_METRIC;   
+    }
 
     convertx_preset = 1.0;
     converty_preset = 1.0;
@@ -201,9 +204,11 @@ void myuserscreen() {
   }  
 
   else {
-    //convertx = CONVERTX_IMPERIAL;
-    //converty = CONVERTY_IMPERIAL;
-    //convertz = CONVERTZ_IMPERIAL;
+    if (countingpulsesmode == false) {
+      convertx = CONVERTX_IMPERIAL;
+      converty = CONVERTY_IMPERIAL;
+      convertz = CONVERTZ_IMPERIAL;
+    }
 
     convertx_preset = 25.4;
     converty_preset = 25.4;
@@ -243,6 +248,11 @@ void myuserscreen() {
   }
 
   if (lathe_mill == LATHE) {
+    if (lathe_mode == LATHEMODE_RADIUS) {
+      longx = longx / 2.0;
+      longy = longy / 2.0;
+    }
+
     strcpy(lcdchars, "LATHE(");
     strcat(lcdchars, MSG_UNITS[units]);
     strcat(lcdchars, ")\nX:");
@@ -364,7 +374,8 @@ void reset() {
   convertx = CONVERTX_METRIC;
   converty = CONVERTY_METRIC;
   convertz = CONVERTZ_METRIC;
-  displayUsrScreenImmediately=true;  
+  displayUsrScreenImmediately=true;
+  countingpulsesmode = false;  
 }
 
 void countpulses() {
@@ -372,6 +383,7 @@ void countpulses() {
   converty = 1.0;
   convertz = 1.0;
   displayUsrScreenImmediately=true;
+  countingpulsesmode = true;
 }
 
 void exitMenu() {
@@ -428,8 +440,8 @@ void handleDigit(int digit) {
 double correct_conversion;
 
   if (loadtool_mode == true) {
-    longCountXEncoder = tool_x[digit];
-    longCountYEncoder = tool_y[digit];
+    longCountXEncoder = tool_x[digit] - tool_x[1];
+    longCountYEncoder = tool_y[digit] - tool_y[1];
     loadtool_mode = false;
     showToolsOffsets();
     return;  
