@@ -53,9 +53,9 @@ int convertx = CONVERTX_METRIC;
 int converty = CONVERTY_METRIC;
 int convertz = CONVERTZ_METRIC;
 
-float CONVERTX_IMPERIAL = CONVERTX_METRIC / 25.4;
-float CONVERTY_IMPERIAL = CONVERTY_METRIC / 25.4;
-float CONVERTZ_IMPERIAL = CONVERTZ_METRIC / 25.4;
+float CONVERTX_IMPERIAL = CONVERTX_METRIC * 25.4;
+float CONVERTY_IMPERIAL = CONVERTY_METRIC * 25.4;
+float CONVERTZ_IMPERIAL = CONVERTZ_METRIC * 25.4;
 
 float convertx_preset, converty_preset, convertz_preset;
 bool countingpulsesmode = false;
