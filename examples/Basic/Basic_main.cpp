@@ -17,7 +17,10 @@ volatile int state;
 long oldPosition = -999;
 long newPosition = 0;
 
-const char *MSG_UNITS[] = {"METRIC","IMPERIAL","SOMETHING1","SOMETHING2","SOMETHING3"};
+const char *MSG_UNITS[] = {" METRIC Dia","IMPERIAL","SOMETHING1","SOMETHING2","SOMETHING3"};
+const char *METRICIMP_LABEL[] = {"METRIC ", "IMPERIAL "};
+const char *DIARAD_LABEL[] = {"DIA ","RAD "};
+
 int units = 0;
 
 int lathe_mill = LATHE; //LATHE chosen by default
@@ -53,9 +56,9 @@ int convertx = CONVERTX_METRIC;
 int converty = CONVERTY_METRIC;
 int convertz = CONVERTZ_METRIC;
 
-float CONVERTX_IMPERIAL = CONVERTX_METRIC * 25.4;
-float CONVERTY_IMPERIAL = CONVERTY_METRIC * 25.4;
-float CONVERTZ_IMPERIAL = CONVERTZ_METRIC * 25.4;
+float CONVERTX_IMPERIAL = CONVERTX_METRIC / 25.4;
+float CONVERTY_IMPERIAL = CONVERTY_METRIC / 25.4;
+float CONVERTZ_IMPERIAL = CONVERTZ_METRIC / 25.4;
 
 float convertx_preset, converty_preset, convertz_preset;
 bool countingpulsesmode = false;
@@ -248,14 +251,15 @@ void myuserscreen() {
   }
 
   if (lathe_mill == LATHE) {
-    if (lathe_mode == LATHEMODE_RADIUS) {
-      longx = longx / 2.0;
-      longy = longy / 2.0;
+    if (lathe_mode == LATHEMODE_DIAMETER) {
+      longx = longx * 2.0;
+      longy = longy * 2.0;
     }
 
-    strcpy(lcdchars, "LATHE(");
-    strcat(lcdchars, MSG_UNITS[units]);
-    strcat(lcdchars, ")\nX:");
+    strcpy(lcdchars, "LATHE   ");
+    strcat(lcdchars, METRICIMP_LABEL[units]);  
+    strcat(lcdchars, DIARAD_LABEL[lathe_mode]);
+    strcat(lcdchars, "\nX:");
     dtostrf(longx, 7,3,   buf);
     strcat(lcdchars,buf);
     strcat(lcdchars, "\nY:");
