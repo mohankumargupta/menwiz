@@ -107,5 +107,8 @@ void encoderZinterrupt();
 
 void showToolsOffsets();
 void clearAndHome();
+
+float pulsesToValue(long,float);
+long valueToPulses(float,float);
 #endif //BASIC_H
 

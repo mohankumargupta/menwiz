@@ -6,6 +6,9 @@
 #define CONVERTY_METRIC 11.88
 #define CONVERTZ_METRIC 720.0
 
+// Enter diameter(mm) of part/workpiece/probe at touchoff
+#define PART_PROBE_DIAMETER 1.5
+
 // Encoder Ports - XYZ Axis linear encoders 
 #define ENCODERX_PINA 2
 #define ENCODERX_PINB 3

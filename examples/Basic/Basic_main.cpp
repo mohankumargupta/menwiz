@@ -452,6 +452,27 @@ double correct_conversion;
   }
 
   else if (storetool_mode == true) {
+    if (machine_mode ==  LATHE_METRIC || LATHE_IMPERIAL) {
+      if (digit == 1) {
+       longCountXEncoder = valueToPulses(PART_PROBE_DIAMETER, convertx);
+       tool_x[1] = 0;
+      }
+      else {
+
+        if (lathe_mode == LATHEMODE_DIAMETER) {
+          tool_x[digit] = (long) (valueToPulses(PART_PROBE_DIAMETER, convertx) - longCountXEncoder)/2;
+        }
+
+        else {
+          tool_x[digit] = valueToPulses(PART_PROBE_DIAMETER, convertx) - longCountXEncoder;
+        }
+         
+        }
+      showToolsOffsets();
+      return;
+  }
+
+
     tool_x[digit] = longCountXEncoder;
     tool_y[digit] = longCountYEncoder;
     storetool_mode = false;
@@ -646,9 +667,9 @@ void showToolsOffsets() {
     Serial.print(i);  
     Serial.print("] - ");
     Serial.print("X:");
-    Serial.print(tool_x[i]);
+    Serial.print(pulsesToValue(tool_x[i], convertx) );
     Serial.print(" Y:");
-    Serial.println(tool_y[i]);
+    Serial.println(pulsesToValue(tool_y[i], converty));
     Serial.println("-----------------------");
   }
 }
@@ -666,3 +687,13 @@ void clearAndHome()
   Serial.println("y: clear y");
   Serial.println("z: clear z");    
 } 
+
+float pulsesToValue(long pulses, float conversion) {
+  float value = (float) pulses/conversion; 
+  return value;
+}
+
+long valueToPulses(float value, float conversion) {
+  long pulses = (long) value * conversion; 
+  return pulses;
+}
