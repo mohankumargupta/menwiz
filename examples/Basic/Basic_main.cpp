@@ -259,10 +259,21 @@ void myuserscreen() {
     strcpy(lcdchars, "LATHE   ");
     strcat(lcdchars, METRICIMP_LABEL[units]);  
     strcat(lcdchars, DIARAD_LABEL[lathe_mode]);
-    strcat(lcdchars, "\nX:");
+    if (machine_mode ==  LATHE_METRIC || LATHE_IMPERIAL) {
+      strcat(lcdchars, "\nZ:");
+    }
+    else {
+      strcat(lcdchars, "\nX:");
+    }
     dtostrf(longx, 7,3,   buf);
     strcat(lcdchars,buf);
-    strcat(lcdchars, "\nY:");
+    if (machine_mode ==  LATHE_METRIC || LATHE_IMPERIAL) {
+      strcat(lcdchars, "\nX:");
+    }
+    else {
+      strcat(lcdchars, "\nY:");
+    }    
+
     dtostrf(longy, 7,3,   buf);
     strcat(lcdchars,buf);
     strcat(lcdchars, "\n");
@@ -679,9 +690,21 @@ void showToolsOffsets() {
     Serial.print("[Tool ");
     Serial.print(i);  
     Serial.print("] - ");
-    Serial.print("X:");
+    if (machine_mode ==  LATHE_METRIC || LATHE_IMPERIAL) {
+      Serial.print("Z:");
+    }
+    else {
+      Serial.print("X:");
+    }    
+
     Serial.print(pulsesToValue(tool_x[i], convertx) );
-    Serial.print(" Y:");
+    if (machine_mode ==  LATHE_METRIC || LATHE_IMPERIAL) {
+      Serial.print(" Z:");
+    }
+    else {
+      Serial.print(" Y:");
+    }    
+
     Serial.println(pulsesToValue(tool_y[i], converty));
     Serial.println("-----------------------");
   }
