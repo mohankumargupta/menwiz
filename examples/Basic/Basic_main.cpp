@@ -686,11 +686,16 @@ void storeToolButton() {
 
 void showToolsOffsets() {
 
+  Serial.print("X: ");
+  Serial.print(pulsesToValue(longCountXEncoder, convertx));
+  Serial.print(" Y: ");
+  Serial.println(pulsesToValue(longCountYEncoder, converty));
+
   for (int i=1; i<=4; i++) {
     Serial.print("[Tool ");
     Serial.print(i);  
     Serial.print("] - ");
-    if (machine_mode ==  LATHE_METRIC || LATHE_IMPERIAL) {
+    if (lathe_mill ==  LATHE) {
       Serial.print("Z:");
     }
     else {
@@ -698,7 +703,7 @@ void showToolsOffsets() {
     }    
 
     Serial.print(pulsesToValue(tool_x[i], convertx) );
-    if (machine_mode ==  LATHE_METRIC || LATHE_IMPERIAL) {
+    if (lathe_mill ==  LATHE) {
       Serial.print(" Z:");
     }
     else {
@@ -706,8 +711,8 @@ void showToolsOffsets() {
     }    
 
     Serial.println(pulsesToValue(tool_y[i], converty));
-    Serial.println("-----------------------");
   }
+  Serial.println("-----------------------");
 }
 
 void clearAndHome() 
