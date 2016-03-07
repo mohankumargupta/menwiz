@@ -52,9 +52,9 @@ bool storetool_mode = false;
 long tool_x[10];
 long tool_y[10];
 
-int convertx = CONVERTX_METRIC;
-int converty = CONVERTY_METRIC;
-int convertz = CONVERTZ_METRIC;
+float convertx = CONVERTX_METRIC;
+float converty = CONVERTY_METRIC;
+float convertz = CONVERTZ_METRIC;
 
 float CONVERTX_IMPERIAL = CONVERTX_METRIC / 25.4;
 float CONVERTY_IMPERIAL = CONVERTY_METRIC / 25.4;
