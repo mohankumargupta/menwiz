@@ -51,6 +51,8 @@ bool loadtool_mode = false;
 bool storetool_mode = false;
 long tool_x[10];
 long tool_y[10];
+int current_tool_selection = 1;
+int touchoff = TOUCHX;
 
 float convertx = CONVERTX_METRIC;
 float converty = CONVERTY_METRIC;
@@ -198,7 +200,11 @@ void myuserscreen() {
     if (countingpulsesmode == false) {
       convertx = CONVERTX_METRIC;
       converty = CONVERTY_METRIC;
-      convertz = CONVERTZ_METRIC;   
+      convertz = CONVERTZ_METRIC;  
+
+      if (lathe_mill == LATHE) {
+        converty = CONVERTZ_METRIC;
+      } 
     }
 
     convertx_preset = 1.0;
@@ -211,6 +217,10 @@ void myuserscreen() {
       convertx = CONVERTX_IMPERIAL;
       converty = CONVERTY_IMPERIAL;
       convertz = CONVERTZ_IMPERIAL;
+
+      if (lathe_mill == LATHE) {
+        converty = CONVERTZ_IMPERIAL;
+      }
     }
 
     convertx_preset = 25.4;
@@ -253,27 +263,16 @@ void myuserscreen() {
   if (lathe_mill == LATHE) {
     if (lathe_mode == LATHEMODE_DIAMETER) {
       longx = longx * 2.0;
-      longy = longy * 2.0;
+      //longy = longy * 2.0;
     }
 
     strcpy(lcdchars, "LATHE   ");
     strcat(lcdchars, METRICIMP_LABEL[units]);  
     strcat(lcdchars, DIARAD_LABEL[lathe_mode]);
-    if (machine_mode ==  LATHE_METRIC || LATHE_IMPERIAL) {
-      strcat(lcdchars, "\nZ:");
-    }
-    else {
-      strcat(lcdchars, "\nX:");
-    }
+    strcat(lcdchars, "\nX:");
     dtostrf(longx, 7,3,   buf);
     strcat(lcdchars,buf);
-    if (machine_mode ==  LATHE_METRIC || LATHE_IMPERIAL) {
-      strcat(lcdchars, "\nX:");
-    }
-    else {
-      strcat(lcdchars, "\nY:");
-    }    
-
+    strcat(lcdchars, "\nZ:");
     dtostrf(longy, 7,3,   buf);
     strcat(lcdchars,buf);
     strcat(lcdchars, "\n");
@@ -385,9 +384,10 @@ void zeroaxis() {
 
 void reset() {
   zeroaxis();
+  lathe_mill = LATHE;
   machine_mode = LATHE_METRIC;
   convertx = CONVERTX_METRIC;
-  converty = CONVERTY_METRIC;
+  converty = CONVERTZ_METRIC;
   convertz = CONVERTZ_METRIC;
   displayUsrScreenImmediately=true;
   countingpulsesmode = false;  
@@ -695,21 +695,9 @@ void showToolsOffsets() {
     Serial.print("[Tool ");
     Serial.print(i);  
     Serial.print("] - ");
-    if (lathe_mill ==  LATHE) {
-      Serial.print("Z:");
-    }
-    else {
-      Serial.print("X:");
-    }    
-
+    Serial.print("X:");
     Serial.print(pulsesToValue(tool_x[i], convertx) );
-    if (lathe_mill ==  LATHE) {
-      Serial.print(" Z:");
-    }
-    else {
-      Serial.print(" Y:");
-    }    
-
+    Serial.print(" Z:");
     Serial.println(pulsesToValue(tool_y[i], converty));
   }
   Serial.println("-----------------------");

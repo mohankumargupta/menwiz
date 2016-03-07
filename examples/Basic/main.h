@@ -53,6 +53,9 @@
 #define STORE_MULTIPLE 1000
 #define STORE_MULTIPLE_FLOAT 1000.0 
 
+#define TOUCHX 0
+#define TOUCHZ 1
+
 
 int navigation();
 void zeroaxis();
