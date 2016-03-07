@@ -203,7 +203,8 @@ void myuserscreen() {
       convertz = CONVERTZ_METRIC;  
 
       if (lathe_mill == LATHE) {
-        converty = CONVERTZ_METRIC;
+        convertx = CONVERTZ_IMPERIAL;
+        converty = CONVERTX_METRIC;
       } 
     }
 
@@ -219,7 +220,8 @@ void myuserscreen() {
       convertz = CONVERTZ_IMPERIAL;
 
       if (lathe_mill == LATHE) {
-        converty = CONVERTZ_IMPERIAL;
+        convertx = CONVERTZ_IMPERIAL;
+        converty = CONVERTX_IMPERIAL;
       }
     }
 
@@ -262,18 +264,17 @@ void myuserscreen() {
 
   if (lathe_mill == LATHE) {
     if (lathe_mode == LATHEMODE_DIAMETER) {
-      longx = longx * 2.0;
-      //longy = longy * 2.0;
+      longy = longy * 2.0;
     }
 
     strcpy(lcdchars, "LATHE   ");
     strcat(lcdchars, METRICIMP_LABEL[units]);  
     strcat(lcdchars, DIARAD_LABEL[lathe_mode]);
     strcat(lcdchars, "\nX:");
-    dtostrf(longx, 7,3,   buf);
+    dtostrf(longy, 7,3,   buf);
     strcat(lcdchars,buf);
     strcat(lcdchars, "\nZ:");
-    dtostrf(longy, 7,3,   buf);
+    dtostrf(longx, 7,3,   buf);
     strcat(lcdchars,buf);
     strcat(lcdchars, "\n");
   }
@@ -386,9 +387,14 @@ void reset() {
   zeroaxis();
   lathe_mill = LATHE;
   machine_mode = LATHE_METRIC;
+  units = METRIC;
   convertx = CONVERTX_METRIC;
-  converty = CONVERTZ_METRIC;
+  converty = CONVERTY_METRIC;
   convertz = CONVERTZ_METRIC;
+  if (machine_mode == LATHE) {
+    convertx = CONVERTZ_METRIC;
+    converty = CONVERTX_METRIC;
+  }
   displayUsrScreenImmediately=true;
   countingpulsesmode = false;  
 }
@@ -456,12 +462,18 @@ double correct_conversion;
 
   if (loadtool_mode == true) {
     if (machine_mode ==  LATHE_METRIC || LATHE_IMPERIAL) {
-      if (lathe_mode == LATHEMODE_DIAMETER) {
-        longCountXEncoder = 2 * tool_x[digit] + longCountXEncoder - 2 * tool_x[current_tool_selection];
+      if (touchoff == TOUCHX) {
+        if (lathe_mode == LATHEMODE_DIAMETER) {
+          longCountYEncoder = 2 * tool_y[digit] + longCountYEncoder - 2 * tool_y[current_tool_selection];
+        }
+
+        else {
+        longCountYEncoder = tool_y[digit] + longCountYEncoder - tool_y[current_tool_selection];
+        }
       }
 
       else {
-        longCountXEncoder = tool_x[digit] + longCountXEncoder - tool_x[current_tool_selection];
+         longCountXEncoder = tool_x[digit] + longCountXEncoder - tool_x[current_tool_selection];
       }
 
       current_tool_selection = digit;
@@ -479,24 +491,33 @@ double correct_conversion;
 
   else if (storetool_mode == true) {
     if (machine_mode ==  LATHE_METRIC || LATHE_IMPERIAL) {
-      if (digit == 1) {
-       longCountXEncoder = valueToPulses(PART_PROBE_DIAMETER, convertx);
-       tool_x[1] = 0;
+      if (touchoff == TOUCHX) {
+        if (digit == 1) {
+          longCountYEncoder = valueToPulses(PART_PROBE_DIAMETER, converty);
+          tool_y[1] = 0;
+        }
+        else {
+          if (lathe_mode == LATHEMODE_DIAMETER) {
+            tool_y[digit] = (long) (valueToPulses(PART_PROBE_DIAMETER, converty) - longCountYEncoder)/2;
+          }
+          else {
+            tool_y[digit] = valueToPulses(PART_PROBE_DIAMETER, converty) - longCountYEncoder;
+          } 
+        }
       }
       else {
-
-        if (lathe_mode == LATHEMODE_DIAMETER) {
-          tool_x[digit] = (long) (valueToPulses(PART_PROBE_DIAMETER, convertx) - longCountXEncoder)/2;
+        if (digit == 1) {
+          longCountXEncoder = 0;
+          tool_x[1] = 0;
         }
-
         else {
-          tool_x[digit] = valueToPulses(PART_PROBE_DIAMETER, convertx) - longCountXEncoder;
+           tool_x[digit] = longCountXEncoder;
         }
-         
-        }
+      }
+
       showToolsOffsets();
       return;
-  }
+    }
 
 
     tool_x[digit] = longCountXEncoder;
@@ -622,15 +643,27 @@ void enterButton() {
 }
 
 void presetX() {
+  storetool_mode = false;
+  loadtool_mode = false;
+  if (lathe_mill == LATHE) {
+    touchoff = TOUCHX;
+    return;
+  }
+
   ptrPresetCount = &longCountX;
   *ptrPresetCount = 0;
   longCountXEncoder = 0;
   current_preset_pos = 0;
-  storetool_mode = false;
-  loadtool_mode = false;
+
 }
 
 void presetY() {
+  storetool_mode = false;
+  loadtool_mode = false;
+  if (lathe_mill == LATHE) {
+    return;
+  }
+
   ptrPresetCount = &longCountY;
   *ptrPresetCount = 0;
   longCountYEncoder = 0;
@@ -640,12 +673,17 @@ void presetY() {
 }
 
 void presetZ() {
+  storetool_mode = false;
+  loadtool_mode = false;
+  if (lathe_mill == LATHE) {
+    touchoff = TOUCHZ;
+    return;
+  }
   ptrPresetCount = &longCountZ;
   *ptrPresetCount = 0;
   longCountZEncoder = 0;
   current_preset_pos = 0;
-  storetool_mode = false;
-  loadtool_mode = false;  
+  
 }
 
 
@@ -689,18 +727,18 @@ void storeToolButton() {
 void showToolsOffsets() {
 
   Serial.print("X: ");
-  Serial.print(pulsesToValue(longCountXEncoder, convertx));
-  Serial.print(" Y: ");
-  Serial.println(pulsesToValue(longCountYEncoder, converty));
+  Serial.print(pulsesToValue(longCountYEncoder, converty));
+  Serial.print(" Z: ");
+  Serial.println(pulsesToValue(longCountXEncoder, convertx));
 
   for (int i=1; i<=4; i++) {
     Serial.print("[Tool ");
     Serial.print(i);  
     Serial.print("] - ");
     Serial.print("X:");
-    Serial.print(pulsesToValue(tool_x[i], convertx) );
+    Serial.print(pulsesToValue(tool_y[i], converty) );
     Serial.print(" Z:");
-    Serial.println(pulsesToValue(tool_y[i], converty));
+    Serial.println(pulsesToValue(tool_x[i], convertx));
   }
   Serial.println("-----------------------");
 }
