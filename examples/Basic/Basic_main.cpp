@@ -455,19 +455,21 @@ void handleDigit(int digit) {
 double correct_conversion;
 
   if (loadtool_mode == true) {
-        if (machine_mode ==  LATHE_METRIC || LATHE_IMPERIAL) {
-                  if (lathe_mode == LATHEMODE_DIAMETER) {
-                    longCountXEncoder = 2 * tool_x[digit] + longCountXEncoder;
-                  }
+    if (machine_mode ==  LATHE_METRIC || LATHE_IMPERIAL) {
+      if (lathe_mode == LATHEMODE_DIAMETER) {
+        longCountXEncoder = 2 * tool_x[digit] + longCountXEncoder - 2 * tool_x[current_tool_selection];
+      }
 
-                  else {
-                    longCountXEncoder = tool_x[digit] + longCountXEncoder;
-                  }
+      else {
+        longCountXEncoder = tool_x[digit] + longCountXEncoder - tool_x[current_tool_selection];
+      }
 
-            loadtool_mode = false;
-    showToolsOffsets();
-    return; 
-        }  
+      current_tool_selection = digit;
+      loadtool_mode = false;
+      showToolsOffsets();
+      return; 
+      }
+
     longCountXEncoder = tool_x[digit];
     longCountYEncoder = tool_y[digit];
     loadtool_mode = false;
