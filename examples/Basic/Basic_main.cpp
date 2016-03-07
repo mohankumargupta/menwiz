@@ -730,6 +730,6 @@ float pulsesToValue(long pulses, float conversion) {
 }
 
 long valueToPulses(float value, float conversion) {
-  long pulses = (long) value * conversion; 
+  long pulses = (long) (value * conversion); 
   return pulses;
 }
