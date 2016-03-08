@@ -203,7 +203,7 @@ void myuserscreen() {
       convertz = CONVERTZ_METRIC;  
 
       if (lathe_mill == LATHE) {
-        convertx = CONVERTZ_IMPERIAL;
+        convertx = CONVERTZ_METRIC;
         converty = CONVERTX_METRIC;
       } 
     }
