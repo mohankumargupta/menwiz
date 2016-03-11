@@ -684,6 +684,9 @@ void presetZ() {
   longCountZEncoder = 0;
   current_preset_pos = 0;
   
+  if (lathe_mill == LATHE) {
+    longCountXEncoder = 0;
+  }
 }
 
 
@@ -725,7 +728,10 @@ void storeToolButton() {
 }
 
 void showToolsOffsets() {
-
+  Serial.print("convertx:");
+  Serial.print(converty);
+  Serial.print("  convertz:");
+  Serial.println(converty);  
   Serial.print("X: ");
   Serial.print(pulsesToValue(longCountYEncoder, converty));
   Serial.print(" Z: ");
