@@ -195,6 +195,10 @@ void loop() {
 }
 
 void myuserscreen() {
+  if (machine_mode == LATHE_METRIC || machine_mode == LATHE_IMPERIAL) {
+    lathe_mill = LATHE;
+  }
+
 
   if (machine_mode == LATHE_METRIC || machine_mode == MILL_METRIC) {
     if (countingpulsesmode == false) {
@@ -677,6 +681,7 @@ void presetZ() {
   loadtool_mode = false;
   if (lathe_mill == LATHE) {
     touchoff = TOUCHZ;
+    longCountXEncoder=0;
     return;
   }
   ptrPresetCount = &longCountZ;
@@ -731,7 +736,7 @@ void showToolsOffsets() {
   Serial.print("convertx:");
   Serial.print(converty);
   Serial.print("  convertz:");
-  Serial.println(converty);  
+  Serial.println(convertx);  
   Serial.print("X: ");
   Serial.print(pulsesToValue(longCountYEncoder, converty));
   Serial.print(" Z: ");
