@@ -17,13 +17,12 @@ volatile int state;
 long oldPosition = -999;
 long newPosition = 0;
 
-const char *MSG_UNITS[] = {" METRIC Dia","IMPERIAL","SOMETHING1","SOMETHING2","SOMETHING3"};
 const char *METRICIMP_LABEL[] = {"METRIC ", "IMPERIAL "};
 const char *DIARAD_LABEL[] = {"DIA ","RAD "};
 
-int units = 0;
+//int units = 0;
 
-int lathe_mill = LATHE; //LATHE chosen by default
+//int lathe_mill = LATHE; //LATHE chosen by default
 
 bool displayUsrScreenImmediately = false;
 char lcdchars[80];
@@ -195,10 +194,6 @@ void loop() {
 }
 
 void myuserscreen() {
-  if (machine_mode == LATHE_METRIC || machine_mode == LATHE_IMPERIAL) {
-    lathe_mill = LATHE;
-  }
-
 
   if (machine_mode == LATHE_METRIC || machine_mode == MILL_METRIC) {
     if (countingpulsesmode == false) {
@@ -206,7 +201,7 @@ void myuserscreen() {
       converty = CONVERTY_METRIC;
       convertz = CONVERTZ_METRIC;  
 
-      if (lathe_mill == LATHE) {
+      if (machine_mode == LATHE_METRIC || machine_mode == LATHE_IMPERIAL) {
         convertx = CONVERTZ_METRIC;
         converty = CONVERTX_METRIC;
       } 
@@ -223,7 +218,7 @@ void myuserscreen() {
       converty = CONVERTY_IMPERIAL;
       convertz = CONVERTZ_IMPERIAL;
 
-      if (lathe_mill == LATHE) {
+      if (machine_mode == LATHE_METRIC || machine_mode == LATHE_IMPERIAL) {
         convertx = CONVERTZ_IMPERIAL;
         converty = CONVERTX_IMPERIAL;
       }
@@ -247,26 +242,9 @@ void myuserscreen() {
   float longy = presetlongy + encoderlongy;
   float longz = presetlongz + encoderlongz;
 
-  switch(machine_mode) {
-    case LATHE_METRIC:
-      lathe_mill = LATHE;
-      units = METRIC;
-      break;
-    case LATHE_IMPERIAL:
-      lathe_mill = LATHE;
-      units = IMPERIAL;
-      break;
-    case MILL_METRIC:
-      lathe_mill = MILL;
-      units = METRIC;
-      break;
-    case MILL_IMPERIAL:
-      lathe_mill = MILL;
-      units = IMPERIAL;
-      break;
-  }
+  int units = machine_mode == LATHE_METRIC || machine_mode == LATHE_IMPERIAL ? 0:1;
 
-  if (lathe_mill == LATHE) {
+  if (machine_mode == LATHE_METRIC || machine_mode == LATHE_IMPERIAL) {
     if (lathe_mode == LATHEMODE_DIAMETER) {
       longy = longy * 2.0;
     }
@@ -285,7 +263,7 @@ void myuserscreen() {
 
   else {
     strcpy(lcdchars, "MILL(");
-    strcat(lcdchars, MSG_UNITS[units]);
+    strcat(lcdchars, METRICIMP_LABEL[units]);
     strcat(lcdchars, ")\nX:");
     dtostrf(longx, 7,3,   buf);
     strcat(lcdchars,buf);
@@ -340,42 +318,6 @@ int navigation() {
     return MW_BTC;
   }
 
-  /*
-  if (Serial.available()) {
-    byte read = Serial.read();
-    switch (read) {
-      case 'e': return MW_BTC;
-      case 'u': return MW_BTU;
-      case 'd': return MW_BTD;
-      case 'l': return MW_BTL;
-      case 'r': return MW_BTR;
-      case 's': return MW_BTE;
-    }
-   }
-
-  else if (preset_x + preset_y + preset_z + 1.5 > 0.01 && tree.cur_menu->parent == 0) {
-    if (preset_x - 0.5 > 0.01) {
-      countX = round(preset_x * CONVERT_UNITS[units] );
-      longCountX = 10 * countX; 
-    }
- 
-    else if (preset_y - 0.5 > 0.01) {
-      countY = round(preset_y * CONVERT_UNITS[units] );
-      longCountY = 10 * countY; 
-    }
-
-    else if (preset_z  - 0.5 > 0.01) {
-      countZ = round(preset_z * CONVERT_UNITS[units] );
-      longCountZ = 10 * countZ; 
-    }
-
-    preset_x = -0.5;
-    preset_y = -0.5;
-    preset_z = -0.5;
-    return MW_BTE;
-  }
-  */
-
   else
      return MW_BTNULL;  
 }
@@ -389,18 +331,13 @@ void zeroaxis() {
 
 void reset() {
   zeroaxis();
-  lathe_mill = LATHE;
   machine_mode = LATHE_METRIC;
-  units = METRIC;
   convertx = CONVERTX_METRIC;
   converty = CONVERTY_METRIC;
   convertz = CONVERTZ_METRIC;
-  if (machine_mode == LATHE) {
-    convertx = CONVERTZ_METRIC;
-    converty = CONVERTX_METRIC;
-  }
   displayUsrScreenImmediately=true;
   countingpulsesmode = false;  
+
 }
 
 void countpulses() {
@@ -438,28 +375,6 @@ void encoderTurned() {
   }
   state = (s >> 2);
 }
-
-void setLatheMode() {
-  lathe_mill = LATHE;
-}
-
-void setMillMode() {
-  lathe_mill = MILL;
-  //Serial.println("MILL");
-}
-
-void setMetric() {
-  units = METRIC;
-}
-
-void setImperial() {
-  units = IMPERIAL;
-}
-
-void doNothing() {
-
-}
-
 
 void handleDigit(int digit) {
 double correct_conversion;
@@ -511,11 +426,10 @@ double correct_conversion;
       }
       else {
         if (digit == 1) {
-          longCountXEncoder = 0;
           tool_x[1] = 0;
         }
         else {
-           tool_x[digit] = longCountXEncoder;
+           tool_x[digit] = -longCountXEncoder;
         }
       }
 
@@ -649,8 +563,9 @@ void enterButton() {
 void presetX() {
   storetool_mode = false;
   loadtool_mode = false;
-  if (lathe_mill == LATHE) {
+  if (machine_mode == LATHE_IMPERIAL || machine_mode == LATHE_METRIC) {
     touchoff = TOUCHX;
+    longCountYEncoder = valueToPulses(PART_PROBE_DIAMETER, converty);
     return;
   }
 
@@ -664,7 +579,7 @@ void presetX() {
 void presetY() {
   storetool_mode = false;
   loadtool_mode = false;
-  if (lathe_mill == LATHE) {
+  if (machine_mode == LATHE_METRIC || machine_mode == LATHE_IMPERIAL) {
     return;
   }
 
@@ -679,7 +594,7 @@ void presetY() {
 void presetZ() {
   storetool_mode = false;
   loadtool_mode = false;
-  if (lathe_mill == LATHE) {
+  if (machine_mode == LATHE_IMPERIAL || machine_mode == LATHE_METRIC) {
     touchoff = TOUCHZ;
     longCountXEncoder=0;
     return;
@@ -688,10 +603,7 @@ void presetZ() {
   *ptrPresetCount = 0;
   longCountZEncoder = 0;
   current_preset_pos = 0;
-  
-  if (lathe_mill == LATHE) {
-    longCountXEncoder = 0;
-  }
+
 }
 
 
@@ -733,25 +645,25 @@ void storeToolButton() {
 }
 
 void showToolsOffsets() {
-  Serial.print("convertx:");
+  Serial.print(F("convertx:"));
   Serial.print(converty);
-  Serial.print("  convertz:");
+  Serial.print(F("  convertz:"));
   Serial.println(convertx);  
-  Serial.print("X: ");
+  Serial.print(F("X: "));
   Serial.print(pulsesToValue(longCountYEncoder, converty));
-  Serial.print(" Z: ");
+  Serial.print(F(" Z: "));
   Serial.println(pulsesToValue(longCountXEncoder, convertx));
 
   for (int i=1; i<=4; i++) {
-    Serial.print("[Tool ");
+    Serial.print(F("[Tool "));
     Serial.print(i);  
-    Serial.print("] - ");
-    Serial.print("X:");
+    Serial.print(F("] - "));
+    Serial.print(F("X:"));
     Serial.print(pulsesToValue(tool_y[i], converty) );
-    Serial.print(" Z:");
+    Serial.print(F(" Z:"));
     Serial.println(pulsesToValue(tool_x[i], convertx));
   }
-  Serial.println("-----------------------");
+  Serial.println(F("-----------------------"));
 }
 
 void clearAndHome() 
@@ -760,12 +672,12 @@ void clearAndHome()
   //Serial.print("[2J"); // clear screen 
   //Serial.write(27); // ESC 
   //Serial.print("[H"); // cursor to home 
-  Serial.println("COMMANDS AVAILABLE");
-  Serial.println("s: store button");
-  Serial.println("l: load button");
-  Serial.println("x: clear x");
-  Serial.println("y: clear y");
-  Serial.println("z: clear z");    
+  Serial.println(F("COMMANDS AVAILABLE"));
+  Serial.println(F("s: store button"));
+  Serial.println(F("l: load button"));
+  Serial.println(F("x: clear x"));
+  Serial.println(F("y: clear y"));
+  Serial.println(F("z: clear z"));    
 } 
 
 float pulsesToValue(long pulses, float conversion) {

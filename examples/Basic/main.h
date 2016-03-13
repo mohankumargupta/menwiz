@@ -18,8 +18,8 @@
 
 
 // Lathe/mill
-#define LATHE 0
-#define MILL 1
+//#define LATHE 0
+//#define MILL 1
 
 //Units
 #define METRIC 0
@@ -66,11 +66,6 @@ void myuserscreen();
 void encoderButtonClicked();
 void encoderTurned();
 
-void setLatheMode();
-void setMillMode();
-void setMetric();
-void setImperial();
-void doNothing();
 void digit0();
 void digit1();
 void digit2();
