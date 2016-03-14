@@ -20,10 +20,6 @@ long newPosition = 0;
 const char *METRICIMP_LABEL[] = {"METRIC ", "IMPERIAL "};
 const char *DIARAD_LABEL[] = {"DIA ","RAD "};
 
-//int units = 0;
-
-//int lathe_mill = LATHE; //LATHE chosen by default
-
 bool displayUsrScreenImmediately = false;
 char lcdchars[80];
 char buf[20];
@@ -200,11 +196,6 @@ void myuserscreen() {
       convertx = CONVERTX_METRIC;
       converty = CONVERTY_METRIC;
       convertz = CONVERTZ_METRIC;  
-
-      if (machine_mode == LATHE_METRIC || machine_mode == LATHE_IMPERIAL) {
-        convertx = CONVERTZ_METRIC;
-        converty = CONVERTX_METRIC;
-      } 
     }
 
     convertx_preset = 1.0;
@@ -412,16 +403,11 @@ double correct_conversion;
     if (machine_mode ==  LATHE_METRIC || LATHE_IMPERIAL) {
       if (touchoff == TOUCHX) {
         if (digit == 1) {
-          longCountYEncoder = valueToPulses(PART_PROBE_DIAMETER, converty);
+          longCountYEncoder = valueToPulses(PART_PROBE_DIAMETER/2, converty);
           tool_y[1] = 0;
         }
         else {
-          if (lathe_mode == LATHEMODE_DIAMETER) {
-            tool_y[digit] = (long) (valueToPulses(PART_PROBE_DIAMETER, converty) - longCountYEncoder)/2;
-          }
-          else {
-            tool_y[digit] = valueToPulses(PART_PROBE_DIAMETER, converty) - longCountYEncoder;
-          } 
+            tool_y[digit] = (long) (valueToPulses(PART_PROBE_DIAMETER/2, converty) - longCountYEncoder);
         }
       }
       else {
