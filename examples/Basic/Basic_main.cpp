@@ -373,13 +373,7 @@ double correct_conversion;
   if (loadtool_mode == true) {
     if (machine_mode ==  LATHE_METRIC || LATHE_IMPERIAL) {
       if (touchoff == TOUCHX) {
-        if (lathe_mode == LATHEMODE_DIAMETER) {
-          longCountYEncoder = 2 * tool_y[digit] + longCountYEncoder - 2 * tool_y[current_tool_selection];
-        }
-
-        else {
-        longCountYEncoder = tool_y[digit] + longCountYEncoder - tool_y[current_tool_selection];
-        }
+          longCountYEncoder = tool_y[digit] + longCountYEncoder - tool_y[current_tool_selection];
       }
 
       else {
