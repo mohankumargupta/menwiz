@@ -409,7 +409,7 @@ double correct_conversion;
           tool_x[1] = 0;
         }
         else {
-           tool_x[digit] = longCountXEncoder;
+           tool_x[digit] = -longCountXEncoder;
         }
       }
 
