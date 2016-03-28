@@ -575,7 +575,7 @@ void presetX() {
   loadtool_mode = false;
   if (machine_mode == LATHE_IMPERIAL || machine_mode == LATHE_METRIC) {
     touchoff = TOUCHX;
-    longCountYEncoder = valueToPulses(PART_PROBE_DIAMETER, converty);
+    longCountYEncoder = valueToPulses(PART_PROBE_DIAMETER/2.0, converty);
     return;
   }
 
