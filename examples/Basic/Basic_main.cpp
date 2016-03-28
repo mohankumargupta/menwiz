@@ -146,14 +146,18 @@ void setup() {
 void loop() {
   tree.draw();
 
-  if (perform_zeroing_function && (millis() - 5000 > 0)) {
-    longCountXEncoder = 0L;
-    longCountYEncoder = 0L;
-    longCountZEncoder = 0L;
-    longCountX = 0L;
-    longCountY = 0L;
-    longCountZ = 0L;
-    perform_zeroing_function = false;  
+  if (perform_zeroing_function) {
+    long m = millis();
+    m = m - 5000L;
+    if (m > 0){
+     longCountXEncoder = 0L;
+     longCountYEncoder = 0L;
+     longCountZEncoder = 0L;
+     longCountX = 0L;
+     longCountY = 0L;
+     longCountZ = 0L;
+     perform_zeroing_function = false;
+    }  
   }
 
   if (Serial.available()) {
