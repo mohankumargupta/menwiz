@@ -30,8 +30,8 @@ bool encoderClicked = false;
 volatile int encoderRotated = ENCODERROTATED_NONE;
 
 menwiz tree;
-volatile int countX=0, countY=0, countZ=0;
-volatile long longCountX=0L, longCountY=0L, longCountZ=0L;
+//volatile int countX=0, countY=0, countZ=0;
+long longCountX=0L, longCountY=0L, longCountZ=0L;
 volatile long longCountXEncoder=0L, longCountYEncoder=0L, longCountZEncoder=0L; 
 volatile long *ptrPresetCount = &longCountX;
 volatile float x,y,z;
@@ -126,6 +126,13 @@ void setup() {
   tree.addUsrNav(navigation,6);
   tree.showUsrScreen();
 
+  longCountX=0L; 
+  longCountY=0L;
+  longCountZ=0L;
+  longCountXEncoder=0L; 
+  longCountYEncoder=0L; 
+  longCountZEncoder=0L;
+
   #ifdef TRELLIS_KEYPAD 
     for (uint8_t i=0; i<16; i++) {
       keypad.setLED(i);
@@ -157,6 +164,14 @@ void loop() {
      case 'x': presetX(); break;
      case 'y': presetY(); break;
      case 'z': presetZ(); break;
+     case 'd': 
+               Serial.print("longCountXEncoder:");
+               Serial.println(longCountXEncoder);
+               Serial.print("longCountX:");
+               Serial.println(longCountX);
+               Serial.print("convertx:");
+               Serial.println(convertx);               
+               break;
     }
   }
 
@@ -221,9 +236,9 @@ void myuserscreen() {
   }
 
 
-  float presetlongx = (float) longCountX/(convertx_preset * STORE_MULTIPLE_FLOAT);
-  float presetlongy = (float) longCountY/(converty_preset * STORE_MULTIPLE_FLOAT);   
-  float presetlongz = (float) longCountZ/(convertz_preset * STORE_MULTIPLE_FLOAT);
+  float presetlongx = (float) longCountX/(convertx_preset);
+  float presetlongy = (float) longCountY/(converty_preset);   
+  float presetlongz = (float) longCountZ/(convertz_preset);
 
   float encoderlongx = (float) longCountXEncoder/convertx; 
   float encoderlongy = (float) longCountYEncoder/converty; 
@@ -657,7 +672,8 @@ void clearAndHome()
   Serial.println(F("l: load button"));
   Serial.println(F("x: clear x"));
   Serial.println(F("y: clear y"));
-  Serial.println(F("z: clear z"));    
+  Serial.println(F("z: clear z")); 
+  Serial.println(F("d: debug mode"));   
 } 
 
 float pulsesToValue(long pulses, float conversion) {
