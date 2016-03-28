@@ -12,6 +12,7 @@
   void (*keyButtonAction[KEYPAD_KEYSCOUNT])() = {presetX, digit1, digit2, digit3, presetY, digit4, digit5, digit6,presetZ,digit7, digit8, digit9,loadToolButton,digit0,decimalPointButton,storeToolButton};
 #endif
 
+bool perform_zeroing_function = true;
 volatile int count=0;
 volatile int state;
 long oldPosition = -999;
@@ -144,6 +145,16 @@ void setup() {
 
 void loop() {
   tree.draw();
+
+  if (perform_zeroing_function && (millis() - 5000 > 0)) {
+    longCountXEncoder = 0L;
+    longCountYEncoder = 0L;
+    longCountZEncoder = 0L;
+    longCountX = 0L;
+    longCountY = 0L;
+    longCountZ = 0L;
+    perform_zeroing_function = false;  
+  }
 
   if (Serial.available()) {
     byte read = Serial.read();
