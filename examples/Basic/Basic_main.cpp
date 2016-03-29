@@ -32,10 +32,10 @@ volatile int encoderRotated = ENCODERROTATED_NONE;
 
 menwiz tree;
 //volatile int countX=0, countY=0, countZ=0;
-long longCountX=0L, longCountY=0L, longCountZ=0L;
+float longCountX=0, longCountY=0, longCountZ=0;
 volatile long longCountXEncoder=0L, longCountYEncoder=0L, longCountZEncoder=0L; 
-volatile long *ptrPresetCount = &longCountX;
-volatile float x,y,z;
+float *ptrPresetCount = &longCountX;
+//volatile float x,y,z;
 int current_preset = CONST_PRESET_X;
 int current_preset_pos = 0;
 int presets[] = {CONVERTX_METRIC, CONVERTY_METRIC, CONVERTZ_METRIC};
@@ -456,7 +456,7 @@ double correct_conversion;
   }
 
   if (machine_mode == LATHE_IMPERIAL || machine_mode == MILL_IMPERIAL) {
-    correct_conversion = 25400.0;
+    correct_conversion = 25.4;
   }
 
   else {
@@ -471,7 +471,8 @@ double correct_conversion;
   }
 
   else {
-    x = x + (float) pow(10, 2 - current_preset_pos) * digit;
+    float q =  pow(10, 2 - current_preset_pos) * digit;
+    x = x + q;
   }
 
   *ptrPresetCount = x * correct_conversion; 
