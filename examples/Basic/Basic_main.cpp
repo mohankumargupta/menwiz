@@ -25,13 +25,13 @@ bool displayUsrScreenImmediately = false;
 char lcdchars[80];
 char buf[20];
 
-bool pressEnterKey = false, pressEscapeKey = false;
+//bool pressEnterKey = false, pressEscapeKey = false;
 
 bool encoderClicked = false;
 volatile int encoderRotated = ENCODERROTATED_NONE;
 
 menwiz tree;
-//volatile int countX=0, countY=0, countZ=0;
+
 float longCountX=0, longCountY=0, longCountZ=0;
 volatile long longCountXEncoder=0L, longCountYEncoder=0L, longCountZEncoder=0L; 
 float *ptrPresetCount = &longCountX;
@@ -85,9 +85,9 @@ void setup() {
     keypad.begin(KEYPAD_I2CADDRESS);
   #endif
 
-  Serial.begin(115200);
+ // Serial.begin(115200);
 
-  clearAndHome();
+ // clearAndHome();
 
 
   #ifdef LCD_SIXTEENBYTWO   
@@ -126,13 +126,12 @@ void setup() {
   tree.addUsrScreen(myuserscreen,TIMEOUT_DELAY);
   tree.addUsrNav(navigation,6);
   tree.showUsrScreen();
-
-  longCountX=0L; 
-  longCountY=0L;
-  longCountZ=0L;
-  longCountXEncoder=0L; 
-  longCountYEncoder=0L; 
-  longCountZEncoder=0L;
+  
+  lcd.home();  //  splash screen
+  lcd.print(" DRO Menwiz ");
+  lcd.setCursor(2,2);           // go to the next line
+  lcd.print(MENWIZ_VERSION_NUMBER);  //Update version No. here
+  delay(2000);
 
   #ifdef TRELLIS_KEYPAD 
     for (uint8_t i=0; i<16; i++) {
@@ -160,7 +159,7 @@ void loop() {
     }  
   }
 
-  if (Serial.available()) {
+/*  if (Serial.available()) {
     byte read = Serial.read();
     switch (read) {
      case 'c': clearAndHome(); break;
@@ -188,12 +187,13 @@ void loop() {
                Serial.println(convertx);               
                break;
     }
-  }
+  }*/
 
   #ifdef TRELLIS_KEYPAD
     if (keypad.readSwitches()) {
       for (uint8_t i=0; i<KEYPAD_KEYSCOUNT; i++) {
         if (keypad.justPressed(i)) {
+          tone(11,532,100);
           keyButtonAction[i]();  
           delay(50);
         }
@@ -205,6 +205,7 @@ void loop() {
 
   newPosition = count;
   if (newPosition != oldPosition) {
+    
     if (newPosition/4 - oldPosition/4 == COUNT_PER_DETENTE) {
       //Serial.println("increment");
       encoderRotated = ENCODERROTATED_CLOCKWISE;
@@ -280,6 +281,8 @@ void myuserscreen() {
     dtostrf(longx, 7,3,   buf);
     strcat(lcdchars,buf);
     strcat(lcdchars, "\n");
+    lcd.setCursor ( 9, 3 );        // go to the next line
+    lcd.print (" Ver.4.4.16 ");
   }
 
   else {
@@ -295,25 +298,30 @@ void myuserscreen() {
     dtostrf(longz, 7,3,   buf);
     strcat(lcdchars,buf);
     strcat(lcdchars,"\n");
+    lcd.setCursor ( 9, 3 );        // go to the next line
+    lcd.print (" Ver.4.4.16 ");
   }
   
   tree.drawUsrScreen(lcdchars); 
 }
 
 int navigation() {
-  if (encoderRotated == ENCODERROTATED_CLOCKWISE) {
-    encoderRotated = ENCODERROTATED_NONE;
 
-    if (tree.cur_menu->parent == 0) 
+  if (encoderRotated == ENCODERROTATED_CLOCKWISE) {
+    tone(11,532,100);
+    encoderRotated = ENCODERROTATED_NONE;
+     
+      if (tree.cur_menu->parent == 0) 
       return  MW_BTU;
     else 
       return MW_BTL;
   }
   
-  if (encoderRotated == ENCODERROTATED_ANTICLOCKWISE) { 
+  if (encoderRotated == ENCODERROTATED_ANTICLOCKWISE) {
+    tone(11,532,100); 
     encoderRotated = ENCODERROTATED_NONE;
-
-    if (tree.cur_menu->parent == 0) 
+   
+         if (tree.cur_menu->parent == 0) 
       return MW_BTD;
     else
       return MW_BTR;
@@ -329,7 +337,7 @@ int navigation() {
    return MW_BTE;
   }
 
-  if (pressEscapeKey) {
+ /* if (pressEscapeKey) {
     pressEscapeKey = false;
     return MW_BTE;
   }
@@ -337,7 +345,7 @@ int navigation() {
   if (pressEnterKey) {
     pressEnterKey = false;
     return MW_BTC;
-  }
+  }*/
 
   else
      return MW_BTNULL;  
@@ -374,11 +382,13 @@ void exitMenu() {
 }
 
 void encoderButtonClicked() {
-  encoderClicked = true; 
+  encoderClicked = true;
+   tone(11,532,100); 
   delay(40);
 }
 
 void encoderTurned() {
+   //tone(11,532,100);
   uint8_t s = state & 3;
   if (digitalRead(ENCODER_A)) s |= 4;
   if (digitalRead(ENCODER_B)) s |= 8;
@@ -412,14 +422,14 @@ double correct_conversion;
 
       current_tool_selection = digit;
       loadtool_mode = false;
-      showToolsOffsets();
+     // showToolsOffsets();
       return; 
       }
 
     longCountXEncoder = tool_x[digit];
     longCountYEncoder = tool_y[digit];
     loadtool_mode = false;
-    showToolsOffsets();
+   // showToolsOffsets();
     return;  
   }
 
@@ -443,7 +453,7 @@ double correct_conversion;
         }
       }
 
-      showToolsOffsets();
+    //  showToolsOffsets();
       return;
     }
 
@@ -451,7 +461,7 @@ double correct_conversion;
     tool_x[digit] = longCountXEncoder;
     tool_y[digit] = longCountYEncoder;
     storetool_mode = false;
-    showToolsOffsets();
+  //  showToolsOffsets();
     return;
   }
 
@@ -525,8 +535,8 @@ void decimalPointButton() {
 
 void loadToolButton() {
   loadtool_mode = true;
-  Serial.println("Load mode selected");
-  Serial.println(" ");
+//  Serial.println("Load mode selected");
+//  Serial.println(" ");
 }
 
 void store_tool1() {
@@ -563,13 +573,13 @@ void load_tool4() {
 }
 
 
-void escapeButton() {
+/*void escapeButton() {
   pressEscapeKey = true;
-}
+}*/
 
-void enterButton() {
+/*void enterButton() {
   pressEnterKey = true;
-}
+}*/
 
 void presetX() {
   storetool_mode = false;
@@ -651,10 +661,11 @@ void encoderZinterrupt() {
 
 void storeToolButton() {
   storetool_mode = true;
-  Serial.println("Store mode selected");
-  Serial.println(" ");
+  
+ // Serial.println("Store mode selected");
+//  Serial.println(" ");
 }
-
+/*
 void showToolsOffsets() {
   Serial.print(F("convertx:"));
   Serial.print(converty);
@@ -689,8 +700,8 @@ void clearAndHome()
   Serial.println(F("x: clear x"));
   Serial.println(F("y: clear y"));
   Serial.println(F("z: clear z")); 
-  Serial.println(F("d: debug mode"));   
-} 
+ // Serial.println(F("d: debug mode"));   
+} */
 
 float pulsesToValue(long pulses, float conversion) {
   float value = (float) pulses/conversion; 

@@ -1,6 +1,7 @@
 #ifndef BASIC_H
 #define BASIC_H
 
+#include "Version.h"
 #include "Configuration.h"
 #include <Arduino.h>
 #include <MENWIZ.h>
